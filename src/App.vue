@@ -14,14 +14,40 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { store } from "./store";  
+
 export default {
   name: 'App',
+  data() {
+    return {
+      store
+    }
+  },
   computed: {
     isTravelRoute() {
       return this.$route.path === '/travel';
     }
   },
+  methods: {
+    getTravels() {
+      axios
+        .get(this.store.api.baseUrl+ 'travel')
+        .then((response) => {
+          this.store.data.travels = response.data;
+          // console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+    },
+   
+  },
+  mounted() {
+    this.getTravels();
+  },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

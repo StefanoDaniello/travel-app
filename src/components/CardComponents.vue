@@ -15,7 +15,7 @@
 
 <script>
     export default {
-        name: 'CardComponents',	
+      name: 'CardComponents',	
     }
 </script>
 

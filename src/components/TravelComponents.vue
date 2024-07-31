@@ -40,10 +40,13 @@
 </template>
 
 <script>
+  import { store } from "../store";
+
 export default {
   name: 'TravelComponents',
   data() {
     return {
+      store,
       form: {
         name: '',
         description: '',
@@ -59,7 +62,7 @@ export default {
   methods: {
     async submitForm() {
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/travel', {
+        const res = await fetch(this.store.api.baseUrl + 'travel', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

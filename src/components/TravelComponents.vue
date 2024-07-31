@@ -81,7 +81,7 @@ export default {
 
 <style lang="scss" scoped>
 .form-container {
-  max-width: 600px;
+  width: 600px;  // Increased width
   margin: 0 auto;
   padding: 20px;
   background-color: #f9f9f9;
@@ -108,7 +108,7 @@ input[type="text"],
 textarea,
 input[type="datetime-local"] {
   width: 100%;
-  padding: 10px;
+  padding: 12px;  // Increased padding
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -119,7 +119,7 @@ input[type="datetime-local"] {
 .btn-submit {
   background-color: #28a745;
   color: white;
-  padding: 10px 15px;
+  padding: 12px 20px;  // Increased padding
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -136,3 +136,4 @@ input[type="datetime-local"] {
   font-weight: bold;
 }
 </style>
+

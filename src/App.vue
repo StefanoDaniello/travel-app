@@ -35,7 +35,7 @@ export default {
         .get(this.store.api.baseUrl+ 'travel')
         .then((response) => {
           this.store.data.travels = response.data;
-          // console.log(response.data);
+          console.log( this.store.data.travels);
         })
         .catch((error) => {
           console.error(error);

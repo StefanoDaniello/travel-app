@@ -1,15 +1,17 @@
 <template>
     <div>
-        <h1>Travel	</h1>
+        <TravelComponents />
     </div>
 </template>
 
 <script>
-    export default {
-        name: 'Travel',
-    }
+import TravelComponents from '../components/TravelComponents.vue'
+export default {
+    name: 'Travel',
+    components: {
+        TravelComponents
+    },
+}
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

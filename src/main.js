@@ -1,4 +1,4 @@
-import './assets/styles/general.scss'
+import './assets/styles/main.scss'
 
 import { createApp } from 'vue'
 import { router } from './router'

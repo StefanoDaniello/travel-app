@@ -43,7 +43,7 @@
   import { store } from "../store";
 
 export default {
-  name: 'TravelComponents',
+  name: 'TravelComponent',
   data() {
     return {
       store,
@@ -71,7 +71,12 @@ export default {
           body: JSON.stringify(this.form)
         });
         const data = await res.json();
-        this.response = 'Travel added successfully!';
+        if (res.ok) {
+          this.response = 'Travel added successfully!';
+          this.$router.push('/');  // Reindirizzamento alla rotta /home
+        } else {
+          this.response = 'Error adding travel!';
+        }
         console.log(data);
       } catch (error) {
         this.response = 'Error adding travel!';
@@ -81,6 +86,7 @@ export default {
   }
 }
 </script>
+
 
 <style lang="scss" scoped>
 .form-container {

@@ -20,6 +20,9 @@
       <div class="form-group">
         <label for="image">Image:</label>
         <input type="file" id="image" @change="handleFileUpload">
+        <div class="image-preview">
+          <img :src="previewImage" @error="setDefaultImg" alt="Image preview" />
+        </div>
       </div>
       <div class="form-group">
         <label for="meal">Meal:</label>
@@ -56,12 +59,19 @@ export default {
                 curiosity: ''
             },
             imageFile: null,
-            response: null
+            response: null,
+            previewImage: '',
         }
     },
     methods: {
         handleFileUpload(event) {
             this.imageFile = event.target.files[0];
+            if (this.imageFile) {
+        this.previewImage = URL.createObjectURL(this.imageFile);
+      }
+        },
+        setDefaultImg(event) {
+            event.target.src = this.store.api.defaultImg;
         },
         async submitForm() {
             const formData = new FormData();
@@ -103,6 +113,21 @@ export default {
 
 
 <style lang="scss" scoped>
+.image-preview {
+  margin-top: 10px;
+  width: 150px;
+  height: 150px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 .form-container {
   width: 600px;  // Increased width
   margin: 0 auto;

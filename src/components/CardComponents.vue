@@ -1,21 +1,39 @@
 <template>
     <div class="card">
     <div class="image-container">
-      <img src="https://picsum.photos/200" alt=""  loading="lazy" class="card-img-top">
-      <div class="badges">
-        <span class="badge rounded-pill" > kqwbefu</span>
-      </div>
+      <img :src="getImage" :alt="travel.name" @error="travel.image = store.api.defaultImg" loading="lazy" class="card-img-top" >
+      <!-- <div class="badges">
+        <span class="badge rounded-pill" > Badge</span>
+      </div> -->
     </div>
     <div class="card-body">
-      <p class="card-title fw-bold">hjwberf</p>
-      <p class="address">hjwberf</p>
+      <p class="card-title fw-bold">{{ travel.name }}</p>
+      <p class="address"> <strong>Start Date:</strong> {{ travel.start_date }}</p>
+      <p class="address"><strong>End Date:</strong> {{ travel.end_date }}</p>
     </div>
   </div>
 </template>
 
 <script>
+  import { store } from "../store";
     export default {
       name: 'CardComponents',	
+      props: ['travel'],
+      data() {
+        return {
+          store
+        }
+      },
+      computed: {
+        getImage() {
+        //   return this.travel.image
+        // ? `${this.store.api.imgBasePath}${this.travel.image}`
+        // : this.store.api.defaultImg;
+
+        return this.store.api.defaultImg;
+
+        }
+      }
     }
 </script>
 

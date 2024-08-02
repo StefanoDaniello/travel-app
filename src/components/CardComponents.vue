@@ -66,7 +66,6 @@
 
 <script>
 import { store } from "../store";
-
 export default {
   name: 'CardComponent',
   props: ['travel'],
@@ -152,10 +151,6 @@ export default {
     }
   }
 };
-
-
-
-
 </script>
 
 <style lang="scss" scoped>

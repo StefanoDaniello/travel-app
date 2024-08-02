@@ -51,12 +51,12 @@ export default {
         return {
             store,
             form: {
-                name: '',
-                description: '',
-                start_date: '',
-                end_date: '',
-                meal: '',
-                curiosity: ''
+              name: '',
+              description: '',
+              start_date: '',
+              end_date: '',
+              meal: '',
+              curiosity: ''
             },
             imageFile: null,
             response: null,
@@ -89,7 +89,7 @@ export default {
                 const res = await fetch(this.store.api.baseUrl + 'travel', {
                     method: 'POST',
                     headers: {
-                        'Accept': 'application/json'
+                      'Accept': 'application/json'
                     },
                     body: formData
                 });

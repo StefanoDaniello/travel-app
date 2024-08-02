@@ -122,6 +122,7 @@ export default {
           this.response = 'Error reading file!';
         };
       } else {
+        this.selectedTravel.image = null; // Imposta l'immagine a null se non viene cambiata
         await this.submitUpdate();
       }
     },
@@ -151,6 +152,7 @@ export default {
     }
   }
 };
+
 
 
 

@@ -2,7 +2,7 @@
   <div>
     <div class="card" @click="showModal(travel)">
       <div class="image-container">
-        <img :src="travel.image" :alt="travel.name" @error="travel.image = store.api.defaultImg" loading="lazy" class="card-img-top" >
+        <img :src="getImage" :alt="travel.name" @error="handleImgError" loading="lazy" class="card-img-top" >
       </div>
       <div class="card-body">
         <p class="card-title fw-bold">{{ travel.name }}</p>
@@ -65,12 +65,15 @@
         selectedTravel: null,
       };
     },
-    // computed: {
-    //   getImage() {
-    //     return this.travel.image ? `${this.store.api.imgBasePath}${this.travel.image}` : this.store.api.defaultImg;
-    //   }
-    // },
+    computed: {
+      getImage() {
+        return this.travel.image ? `${this.store.api.imgBasePath}${this.travel.image}` : this.store.api.defaultImg;
+      },
+    },
     methods: {
+      handleImgError(event) {
+        event.target.src = this.store.api.defaultImg;
+      },
       showModal(travel) {
         this.selectedTravel = { ...travel };
       },

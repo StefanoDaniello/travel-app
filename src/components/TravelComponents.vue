@@ -19,7 +19,7 @@
       </div>
       <div class="form-group">
         <label for="image">Image:</label>
-        <input type="text" id="image" v-model="form.image">
+        <input type="file" id="image" @change="handleFileUpload">
       </div>
       <div class="form-group">
         <label for="meal">Meal:</label>
@@ -43,49 +43,63 @@
   import { store } from "../store";
 
 export default {
-  name: 'TravelComponent',
-  data() {
-    return {
-      store,
-      form: {
-        name: '',
-        description: '',
-        start_date: '',
-        end_date: '',
-        image: '',
-        meal: '',
-        curiosity: ''
-      },
-      response: null
-    }
-  },
-  methods: {
-    async submitForm() {
-      try {
-        const res = await fetch(this.store.api.baseUrl + 'travel', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(this.form)
-        });
-        const data = await res.json();
-        if (res.ok) {
-          this.response = 'Travel added successfully!';
-          this.$router.push('/');  // Reindirizzamento alla rotta /home
-        } else {
-          this.response = 'Error adding travel!';
+    name: 'TravelComponent',
+    data() {
+        return {
+            store,
+            form: {
+                name: '',
+                description: '',
+                start_date: '',
+                end_date: '',
+                meal: '',
+                curiosity: ''
+            },
+            imageFile: null,
+            response: null
         }
-        console.log(data);
-      } catch (error) {
-        this.response = 'Error adding travel!';
-        console.error(error);
-      }
+    },
+    methods: {
+        handleFileUpload(event) {
+            this.imageFile = event.target.files[0];
+        },
+        async submitForm() {
+            const formData = new FormData();
+            formData.append('name', this.form.name);
+            formData.append('description', this.form.description);
+            formData.append('start_date', this.form.start_date);
+            formData.append('end_date', this.form.end_date);
+            formData.append('meal', this.form.meal);
+            formData.append('curiosity', this.form.curiosity);
+            if (this.imageFile) {
+                formData.append('image', this.imageFile);
+            }
+
+            try {
+                const res = await fetch(this.store.api.baseUrl + 'travel', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    this.response = 'Travel added successfully!';
+                    this.$router.push('/');  // Reindirizzamento alla rotta /
+                } else {
+                    this.response = 'Error adding travel!';
+                }
+                console.log(data);
+            } catch (error) {
+                this.response = 'Error adding travel!';
+                console.error(error);
+            }
+        }
     }
-  }
 }
 </script>
+
 
 
 <style lang="scss" scoped>

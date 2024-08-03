@@ -27,11 +27,11 @@
           </div>
           <div class="form-group">
             <label for="start_date">Start Date:</label>
-            <input type="datetime-local" id="start_date" v-model="selectedTravel.start_date" required>
+            <input type="date" id="start_date" v-model="selectedTravel.start_date" required>
           </div>
           <div class="form-group">
             <label for="end_date">End Date:</label>
-            <input type="datetime-local" id="end_date" v-model="selectedTravel.end_date" required>
+            <input type="date" id="end_date" v-model="selectedTravel.end_date" required>
           </div>
           <div class="form-group">
             <label for="image">Image:</label>

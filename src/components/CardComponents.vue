@@ -49,6 +49,37 @@
             <textarea id="curiosity" v-model="selectedTravel.curiosity"></textarea>
           </div>
           <div class="form-group">
+            <label for="road_name">Road Name:</label>
+            <input type="text" id="road_name" v-model="selectedTravel.road.name" required>
+          </div>
+          <div class="form-group">
+            <label for="road_description">Road Description:</label>
+            <textarea id="road_description" v-model="selectedTravel.road.description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="road_start_date">Road Start Date:</label>
+            <input type="date" id="road_start_date" v-model="selectedTravel.road.start_date" required>
+          </div>
+          <div class="form-group">
+            <label for="road_end_date">Road End Date:</label>
+            <input type="date" id="road_end_date" v-model="selectedTravel.road.end_date" required>
+          </div>
+          <div class="form-group">
+            <label for="road_image">Road Image:</label>
+            <input type="file" id="road_image" @change="handleRoadFileChange">
+            <div class="image-preview">
+              <img :src="roadPreviewImage" @error="setDefaultRoadImg" alt="Road image preview" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="road_rate">Road Rate:</label>
+            <input type="number" id="road_rate" v-model="selectedTravel.road.rate" required>
+          </div>
+          <div class="form-group">
+            <label for="road_note">Road Note:</label>
+            <textarea id="road_note" v-model="selectedTravel.road.note"></textarea>
+          </div>
+          <div class="form-group">
             <button type="submit" class="btn-submit">Save Changes</button>
           </div>
         </form>
@@ -70,7 +101,9 @@ export default {
       store,
       selectedTravel: null,
       imageFile: null,
+      roadImageFile: null,
       previewImage: '',
+      roadPreviewImage: '',
       defaultImg: '/images/placeholder.png',
       response: null
     };
@@ -85,13 +118,16 @@ export default {
       event.target.src = this.defaultImg;
     },
     showModal(travel) {
-      this.selectedTravel = { ...travel };
+      this.selectedTravel = { ...travel, road: { ...travel.road } };
       this.previewImage = this.getImage; // Imposta l'immagine di anteprima
+      this.roadPreviewImage = travel.road?.image ? `${this.store.api.imgBasePath}${travel.road.image}` : this.defaultImg;
     },
     closeModal() {
       this.selectedTravel = null;
       this.imageFile = null;
+      this.roadImageFile = null;
       this.previewImage = '';
+      this.roadPreviewImage = '';
     },
     handleFileChange(event) {
       const file = event.target.files[0];
@@ -100,12 +136,21 @@ export default {
         this.imageFile = file;
       }
     },
+    handleRoadFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.roadPreviewImage = URL.createObjectURL(file);
+        this.roadImageFile = file;
+      }
+    },
     setDefaultImg(event) {
+      event.target.src = this.defaultImg;
+    },
+    setDefaultRoadImg(event) {
       event.target.src = this.defaultImg;
     },
     async updateTravel() {
       if (this.imageFile) {
-        // Converti il file immagine in base64
         const reader = new FileReader();
         reader.readAsDataURL(this.imageFile);
         reader.onload = async () => {
@@ -117,7 +162,21 @@ export default {
           this.response = 'Error reading file!';
         };
       } else {
-        this.selectedTravel.image = null; // Imposta l'immagine a null se non viene cambiata
+        await this.submitUpdate();
+      }
+
+      if (this.roadImageFile) {
+        const reader = new FileReader();
+        reader.readAsDataURL(this.roadImageFile);
+        reader.onload = async () => {
+          this.selectedTravel.road.image = reader.result;
+          await this.submitUpdate();
+        };
+        reader.onerror = (error) => {
+          console.error('Error reading file:', error);
+          this.response = 'Error reading file!';
+        };
+      } else {
         await this.submitUpdate();
       }
     },
@@ -148,6 +207,9 @@ export default {
   }
 };
 </script>
+
+
+
 
 <style lang="scss" scoped>
 .image-preview {
@@ -192,9 +254,6 @@ export default {
   cursor: pointer;
 }
 
-
-
-    
 .card {
   border: 0;
   border-radius: 0;
@@ -204,14 +263,17 @@ export default {
     position: relative;
     overflow: hidden;
     border-radius: 20px;
-    img{
-        height: 200px;
+
+    img {
+      height: 200px;
     }
+
     .badges {
       position: absolute;
       bottom: 8px;
       right: 12px;
       z-index: 1;
+
       .badge {
         background-color: blanchedalmond;
         color: black;
@@ -237,6 +299,7 @@ export default {
 
     p {
       margin: 0;
+
       &.address {
         font-size: 0.8rem;
         margin-top: -4px;

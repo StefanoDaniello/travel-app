@@ -118,9 +118,9 @@ export default {
       event.target.src = this.defaultImg;
     },
     showModal(travel) {
-      this.selectedTravel = { ...travel, road: { ...travel.road } };
-      this.previewImage = this.getImage; // Imposta l'immagine di anteprima
-      this.roadPreviewImage = travel.road?.image ? `${this.store.api.imgBasePath}${travel.road.image}` : this.defaultImg;
+      this.selectedTravel = { ...travel, road: { ...travel.road[0] } };
+      this.previewImage = this.getImage; 
+      this.roadPreviewImage = travel.road[0]?.image ? `${this.store.api.imgBasePath}${travel.road[0].image}` : this.defaultImg;
     },
     closeModal() {
       this.selectedTravel = null;
@@ -207,7 +207,6 @@ export default {
   }
 };
 </script>
-
 
 
 

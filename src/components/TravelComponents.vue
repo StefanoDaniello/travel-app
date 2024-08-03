@@ -102,7 +102,8 @@ export default {
             end_date: '',
             rate: 0,
             note: '',
-            previewImage: ''
+            previewImage: '',
+            imageFile: null
           }
         ]
       },
@@ -139,7 +140,8 @@ export default {
         end_date: '',
         rate: 0,
         note: '',
-        previewImage: ''
+        previewImage: '',
+        imageFile: null
       });
     },
     async submitForm() {
@@ -190,6 +192,7 @@ export default {
   }
 }
 </script>
+
 
 <style lang="scss" scoped>
 .image-preview {

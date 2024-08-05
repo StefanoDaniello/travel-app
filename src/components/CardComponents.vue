@@ -27,17 +27,20 @@
                 </div> -->
                 <p><strong>Meal:</strong> {{ selectedTravel.meal }}</p>
                 <p><strong>Curiosity:</strong> {{ selectedTravel.curiosity }}</p>
-                <p><strong>Road Name:</strong> {{ selectedTravel.road.name }}</p>
-                <p><strong>Road Description:</strong> {{ selectedTravel.road.description }}</p>
-                <p><strong>Road Start Date:</strong> {{ selectedTravel.road.start_date }}</p>
-                <p><strong>Road End Date:</strong> {{ selectedTravel.road.end_date }}</p>
-                <p><strong>Road Image:</strong></p>
-                <!-- <div class="image-container">
-                    <img :src="roadPreviewImage" :alt="selectedTravel.road.name" @error="handleImgError" loading="lazy"
+                <div v-for="road in selectedTravel.road" :key="road.id">
+                    <p><strong>Road Name:</strong> {{ road.name }}</p>
+                    <p><strong>Road Description:</strong> {{ road.description }}</p>
+                    <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
+                    <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
+                    <p><strong>Road Image:</strong></p>
+                    <div class="image-container">
+                    <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy"
                         class="card-img-top">
-                </div> -->
-                <p><strong>Road Rate:</strong> {{ selectedTravel.road.rate }}</p>
-                <p><strong>Road Note:</strong> {{ selectedTravel.road.note }}</p>
+                    </div> 
+                    <p><strong>Road Rate:</strong> {{ road.rate }}</p>
+                    <p><strong>Road Note:</strong> {{ road.note }}</p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -53,7 +56,6 @@ export default {
             store,
             selectedTravel: null,
             previewImage: '',
-            roadPreviewImage: '',
             defaultImg: '/images/placeholder.png',
         };
     },
@@ -64,9 +66,11 @@ export default {
     },
     methods: {
         showModal(travel) {
-            this.selectedTravel = { ...travel, road: { ...travel.road[0] } };
+            this.selectedTravel = { ...travel, road: { ...travel.road } };
             this.previewImage = this.getImage;
-            this.roadPreviewImage = travel.road[0]?.image ? `${this.store.api.imgBasePath}${travel.road[0].image}` : this.defaultImg;
+        },
+        roadImage(img){
+            return  img ? `${this.store.api.imgBasePath}${img}` : this.defaultImg;
         },
         closeModal() {
             this.selectedTravel = null;
@@ -74,8 +78,6 @@ export default {
         handleImgError(event) {
             event.target.src = this.defaultImg;
         },
-
-
     }
 }
 </script>

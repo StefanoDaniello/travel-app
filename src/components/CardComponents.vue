@@ -21,10 +21,10 @@
                 <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
                 <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
                 <p><strong>Image:</strong></p>
-                <!-- <div class="image-container">
-                    <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy"
+                <div class="image-container">
+                    <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" 
                         class="card-img-top">
-                </div> -->
+                </div> 
                 <p><strong>Meal:</strong> {{ selectedTravel.meal }}</p>
                 <p><strong>Curiosity:</strong> {{ selectedTravel.curiosity }}</p>
                 <div v-for="road in selectedTravel.road" :key="road.id">
@@ -34,7 +34,7 @@
                     <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
                     <p><strong>Road Image:</strong></p>
                     <div class="image-container">
-                    <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy"
+                    <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" 
                         class="card-img-top">
                     </div> 
                     <p><strong>Road Rate:</strong> {{ road.rate }}</p>

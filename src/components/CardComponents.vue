@@ -15,29 +15,37 @@
         <div v-if="selectedTravel" class="modal" @click.self="closeModal">
             <div class="modal-content">
                 <span class="close" @click="closeModal">&times;</span>
-                <h2>{{ selectedTravel.name }}</h2>
-                <div class="image-container">
-                    <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy" class="modal-img-top">
-                </div>
-                <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
-                <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
-                <p><strong>Meal:</strong> {{ selectedTravel.meal }}</p>
-                <p><strong>Curiosity:</strong> {{ selectedTravel.curiosity }}</p>
-                <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
-                <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
-                    <div class="road-info">
-                        <h3>Road {{ index + 1 }} </h3>
-                        <p><strong>Road Name:</strong> {{ road.name }}</p>
-                        <p><strong>Road Description:</strong> {{ road.description }}</p>
-                        <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
-                        <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
-                        <p><strong>Road Rate:</strong> <span v-html="generateStars(road.rate)"></span></p>
-                        <p><strong>Road Note:</strong> {{ road.note }}</p>
+                <form @submit.prevent="submitUpdate">
+                    <h2>{{ selectedTravel.name }}</h2>
+                    <div class="image-container">
+                        <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy"
+                            class="modal-img-top">
                     </div>
-                    <div class="road-image">
-                        <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy" class="card-img-top">
+                    <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
+                    <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
+                    <p><strong>Meal:</strong> {{ selectedTravel.meal }}</p>
+                    <p><strong>Curiosity:</strong> {{ selectedTravel.curiosity }}</p>
+                    <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
+                    <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
+                        <div class="road-info">
+                            <h3>Road {{ index + 1 }} </h3>
+                            <p><strong>Road Name:</strong> {{ road.name }}</p>
+                            <p><strong>Road Description:</strong> {{ road.description }}</p>
+                            <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
+                            <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
+                            <p><strong>Road Rate:</strong> <span v-html="generateStars(road.rate)"></span></p>
+                            <p><strong>Road Note:</strong> </p>
+                            <textarea id="road_note" v-model="road.note">{{ road.note }}</textarea>
+                        </div>
+                        <div class="road-image">
+                            <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy"
+                                class="card-img-top">
+                        </div>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-submit">Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -65,6 +73,7 @@ export default {
         showModal(travel) {
             this.selectedTravel = { ...travel, road: [...travel.road] };
             this.previewImage = this.getImage;
+            console.log(this.selectedTravel);
         },
         roadImage(img) {
             return img ? `${this.store.api.imgBasePath}${img}` : this.defaultImg;
@@ -81,6 +90,30 @@ export default {
                 stars += i < rate ? '<span class="star filled" style="color: gold ; font-size: 1.5rem ">★</span>' : '<span class="star empty" style="color: transparent ; -webkit-text-stroke: 0.5px gold; font-size: 1.5rem;">☆</span>';
             }
             return stars;
+        },
+        async submitUpdate() {
+            try {
+                const res = await fetch(`${this.store.api.baseUrl}travel/${this.selectedTravel.slug}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(this.selectedTravel)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    this.response = 'Travel updated successfully!';
+                    this.closeModal();
+                    window.location.reload();
+                } else {
+                    this.response = 'Error updating travel!';
+                }
+                console.log(data);
+            } catch (error) {
+                this.response = 'Error updating travel!';
+                console.error(error);
+            }
         }
     }
 }
@@ -124,7 +157,7 @@ export default {
     max-height: 95%;
     overflow-y: auto;
 }
-    
+
 
 /* Custom scrollbar styles */
 .modal-content::-webkit-scrollbar {
@@ -132,19 +165,22 @@ export default {
 }
 
 .modal-content::-webkit-scrollbar-track {
-    background-color: #f5f5f5; /* Remove background of the scrollbar track */
+    background-color: #f5f5f5;
+    /* Remove background of the scrollbar track */
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Customize the color of the scrollbar thumb */
+    background-color: #ccc;
+    /* Customize the color of the scrollbar thumb */
     border-radius: 10px;
     border: 3px solid transparent;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-    background-color: #aaa; /* Color when hovered */
+    background-color: #aaa;
+    /* Color when hovered */
 }
 
 .close {

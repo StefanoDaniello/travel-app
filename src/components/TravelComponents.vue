@@ -278,10 +278,10 @@ export default {
         this.errors.end_date = "End Date must be after Start Date.";
         isValid = false;
       }
-      if (this.form.imageFile != ".png" && this.form.imageFile != ".jpg" && this.form.imageFile != ".jpeg" && this.form.imageFile != ".gif") {
-        this.errors.image = "Image must be a .png, .jpg, .jpeg or .gif file.";
-        isValid = false;
-      }
+      // if (this.form.imageFile != ".png" && this.form.imageFile != ".jpg" && this.form.imageFile != ".jpeg" && this.form.imageFile != ".gif") {
+      //   this.errors.image = "Image must be a .png, .jpg, .jpeg or .gif file.";
+      //   isValid = false;
+      // }
       if (this.form.imageFile > 2048 * 1024) {
         this.errors.image = "Image must be less than 2MB.";
         isValid = false;
@@ -328,9 +328,9 @@ export default {
         if (road.imageFile > 2048 * 1024) {
           roadErrors[`road_${index}_imageFile`] = "File size cannot exceed 2MB.";
         }
-        if (road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
-          roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
-        }
+        // if (road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
+        //   roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
+        // }
       });
 
       return roadErrors;

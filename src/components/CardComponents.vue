@@ -53,8 +53,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-success text-white">Save Changes</button>
-                        <button type="button" class="btn btn-danger" @click="DeteleModal">Delete</button>
+                        <button type="submit" class="btn btn-success text-white">Salva Modifiche</button>
+                        <button type="button" class="btn btn-danger" @click="DeteleModal">Elimina</button>
                     </div>
                 </form>
                 <div v-if="io==1">
@@ -62,10 +62,10 @@
                         <div class="modal-detele-content">
                             <span class="close" @click="closeDeteleModal">&times;</span>
                             <form @submit.prevent="submitDelete">
-                                <h2>Delete Confirmation</h2>
-                                <p>Are you sure you want to delete this travel?</p>
-                                <div class="d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                <h2>Conferma Eliminazione</h2>
+                                <p>Sei sicuro di voler eliminare {{ selectedTravel.name }}?</p>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-danger">Elimina</button>
                                 </div>
                             </form>
                         </div>

@@ -23,8 +23,11 @@
                     </div>
                     <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
                     <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
-                    <p><strong>Meal:</strong> {{ selectedTravel.meal }}</p>
-                    <p><strong>Curiosity:</strong> {{ selectedTravel.curiosity }}</p>
+                    <p><strong>Meal:</strong></p>
+                    <textarea id="meal" v-model="selectedTravel.meal">{{ selectedTravel.meal }}</textarea>
+                    <p><strong>Curiosity:</strong></p>
+                    <textarea id="curiosity"
+                        v-model="selectedTravel.curiosity">{{ selectedTravel.curiosity }}</textarea>
                     <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
                     <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
                         <div class="road-info">
@@ -33,8 +36,15 @@
                             <p><strong>Road Description:</strong> {{ road.description }}</p>
                             <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
                             <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
-                            <p><strong>Road Rate:</strong> <span v-html="generateStars(road.rate)"></span></p>
-                            <p><strong>Road Note:</strong> </p>
+                               
+                                <div class="star-rating">
+                                    <p><strong>Road Rate:</strong></p>
+                                    <span v-for="star in 5" :key="star" class="star"
+                                        :class="{ filled: star <= road.rate }"
+                                        @click="setRoadRating(index, star)">&#9733;</span>
+                                </div>
+
+                            <p><strong>Road Note:</strong></p>
                             <textarea id="road_note" v-model="road.note">{{ road.note }}</textarea>
                         </div>
                         <div class="road-image">
@@ -42,7 +52,7 @@
                                 class="card-img-top">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div >
                         <button type="submit" class="btn-submit">Save Changes</button>
                     </div>
                 </form>
@@ -70,6 +80,9 @@ export default {
         },
     },
     methods: {
+        setRoadRating(index, rating) {
+            this.selectedTravel.road[index].rate = rating;
+        },
         showModal(travel) {
             this.selectedTravel = { ...travel, road: [...travel.road] };
             this.previewImage = this.getImage;
@@ -120,6 +133,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.star {
+  font-size: 24px; // Increased star size
+  color: #d3d3d3; // Light grey for empty stars
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.star.filled {
+  color: gold; // Gold color for filled stars
+}
+.star-rating {
+ margin-bottom: 10px;
+}
 .image-preview {
     margin-top: 10px;
     width: 150px;

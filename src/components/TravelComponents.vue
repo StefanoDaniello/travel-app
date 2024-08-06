@@ -4,34 +4,49 @@
       <!-- Travel Form Fields -->
       <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" id="name" v-model="form.name">
+        <input type="text" id="name" v-model="form.name" />
         <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
       </div>
+
+      <div class="form-group-horizontal">
+        <div class="form-group">
+          <label for="start_date">Start Date:</label>
+          <input type="date" id="start_date" v-model="form.start_date" />
+          <span v-if="errors.start_date" class="error-message">{{
+            errors.start_date
+          }}</span>
+        </div>
+        <div class="form-group">
+          <label for="end_date">End Date:</label>
+          <input type="date" id="end_date" v-model="form.end_date" />
+          <span v-if="errors.end_date" class="error-message">{{
+            errors.end_date
+          }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="image">Image:</label>
+        <input type="file" id="image" @change="handleFileUpload" />
+        <div class="image-preview" v-if="previewImage">
+          <img :src="previewImage || store.api.defaultImg" @error="setDefaultImg" alt="Image preview" />
+        </div>
+        <div v-else class="image-preview">
+          <img :src="store.api.defaultImg" alt="Default image preview" />
+        </div>
+        <span v-if="errors.image" class="error-message">{{ errors.image }}</span>
+      </div>
+
       <div class="form-group">
         <label for="description">Description:</label>
         <textarea id="description" v-model="form.description"></textarea>
       </div>
-      <div class="form-group">
-        <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" v-model="form.start_date">
-        <span v-if="errors.start_date" class="error-message">{{ errors.start_date }}</span>
-      </div>
-      <div class="form-group">
-        <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" v-model="form.end_date">
-        <span v-if="errors.end_date" class="error-message">{{ errors.end_date }}</span>
-      </div>
-      <div class="form-group">
-        <label for="image">Image:</label>
-        <input type="file" id="image" @change="handleFileUpload">
-        <div class="image-preview">
-          <img :src="previewImage" @error="setDefaultImg" alt="Image preview" />
-        </div>
-      </div>
+
       <div class="form-group">
         <label for="meal">Meal:</label>
         <textarea id="meal" v-model="form.meal"></textarea>
       </div>
+
       <div class="form-group">
         <label for="curiosity">Curiosity:</label>
         <textarea id="curiosity" v-model="form.curiosity"></textarea>
@@ -39,41 +54,67 @@
 
       <!-- Roads Section -->
       <div v-for="(road, index) in form.roads" :key="index" class="road-group">
-        <h3>Road {{ index + 1 }}</h3>
+        <div class="d-flex align-items-center mb-3">
+          <h3 class="mx-2">Road {{ index + 1 }}</h3>
+          <button v-if="index + 1 > 1" class="btn btn-danger btn-sm" @click="openDeleteModal(index)">
+            x
+          </button>
+        </div>
+
         <div class="form-group">
           <label :for="'road_name_' + index">Road Name:</label>
-          <input type="text" :id="'road_name_' + index" v-model="road.name">
-          <span v-if="errors[`road_${index}_name`] " class="error-message">{{ errors[`road_${index}_name`] }}</span>
+          <input type="text" :id="'road_name_' + index" v-model="road.name" />
+          <span v-if="errors[`road_${index}_name`]" class="error-message">{{
+            errors[`road_${index}_name`]
+          }}</span>
         </div>
+
+        <div class="form-group-horizontal">
+          <div class="form-group">
+            <label :for="'road_start_date_' + index">Road Start Date:</label>
+            <input type="date" :id="'road_start_date_' + index" v-model="road.start_date" />
+            <span v-if="errors[`road_${index}_start_date`]" class="error-message">{{ errors[`road_${index}_start_date`]
+              }}</span>
+          </div>
+          <div class="form-group">
+            <label :for="'road_end_date_' + index">Road End Date:</label>
+            <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" />
+            <span v-if="errors[`road_${index}_end_date`]" class="error-message">{{ errors[`road_${index}_end_date`]
+              }}</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label :for="'road_image_' + index">Road Image:</label>
+          
+          <div class="d-flex">
+            <input type="file" :id="'road_image_' + index" @change="(event) => handleRoadFileUpload(event, index)" />
+            <div class="image-preview" v-if="road.previewImage">
+              <img :src="road.previewImage || store.api.defaultImg" @error="setDefaultRoadImg"
+                alt="Road image preview" />
+            </div>
+            <div v-else class="image-preview">
+              <img :src="store.api.defaultImg" alt="Default image preview" />
+            </div>
+          </div>
+          <span v-if="errors[`road_${index}_image`]" class="error-message">{{
+            errors[`road_${index}_image`]
+          }}</span>
+        </div>
+
         <div class="form-group">
           <label :for="'road_description_' + index">Road Description:</label>
           <textarea :id="'road_description_' + index" v-model="road.description"></textarea>
         </div>
-        <div class="form-group">
-          <label :for="'road_start_date_' + index">Road Start Date:</label>
-          <input type="date" :id="'road_start_date_' + index" v-model="road.start_date">
-          <span v-if="errors[`road_${index}_start_date`] " class="error-message">{{ errors[`road_${index}_start_date`] }}</span>
-        </div>
-        <div class="form-group">
-          <label :for="'road_end_date_' + index">Road End Date:</label>
-          <input type="date" :id="'road_end_date_' + index" v-model="road.end_date">
-          <span v-if="errors[`road_${index}_end_date`] " class="error-message">{{ errors[`road_${index}_end_date`] }}</span>
-        </div>
-        <div class="form-group">
-          <label :for="'road_image_' + index">Road Image:</label>
-          <input type="file" :id="'road_image_' + index" @change="event => handleRoadFileUpload(event, index)">
-          <div class="image-preview">
-            <img :src="road.previewImage || store.api.defaultImg" @error="setDefaultRoadImg" alt="Road image preview" />
-          </div>
-        </div>
+
         <div class="form-group">
           <label :for="'road_rate_' + index">Road Rate:</label>
           <div class="star-rating">
-            <span v-for="star in 5" :key="star" class="star"
-                  :class="{ filled: star <= road.rate }"
-                  @click="setRoadRating(index, star)">&#9733;</span>
+            <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
+              @click="setRoadRating(index, star)">&#9733;</span>
           </div>
         </div>
+
         <div class="form-group">
           <label :for="'road_note_' + index">Road Note:</label>
           <textarea :id="'road_note_' + index" v-model="road.note"></textarea>
@@ -81,11 +122,28 @@
       </div>
 
       <!-- Buttons -->
-      <div class="form-group">
-        <button type="button" class="btn btn-primary mx-3 text-white" @click="addRoad">Add Road</button>
-        <button type="submit" class="btn btn-success text-white">Add Travel</button>
+      <div class="form-group d-flex justify-content-between">
+        <button type="button" class="btn btn-primary" @click="addRoad">
+          Add Road
+        </button>
+        <button type="submit" class="btn btn-success">Add Travel</button>
       </div>
     </form>
+
+    <div v-if="showDeleteModal" class="delete-modal">
+      <div class="modal-content">
+        <p>Vuoi davvero cancellare questa rotta?</p>
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-danger mx-1" @click="deleteRoad">
+            Delete
+          </button>
+          <button class="btn btn-secondary mx-1" @click="closeDeleteModal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div v-if="response" class="response-message" ref="responseMessage">
       <p>{{ response }}</p>
     </div>
@@ -96,37 +154,40 @@
 import { store } from "../store";
 
 export default {
-  name: 'TravelComponent',
+  name: "TravelComponent",
   data() {
     return {
       store,
       form: {
-        name: '',
-        description: '',
-        start_date: '',
-        end_date: '',
-        meal: '',
-        curiosity: '',
+        name: "",
+        description: "",
+        start_date: "",
+        end_date: "",
+        meal: "",
+        curiosity: "",
         roads: [
           {
-            name: '',
-            description: '',
-            start_date: '',
-            end_date: '',
+            name: "",
+            description: "",
+            start_date: "",
+            end_date: "",
             rate: 0,
-            note: '',
-            previewImage: '',
-            imageFile: null
-          }
-        ]
+            note: "",
+            previewImage: "",
+            imageFile: null,
+          },
+        ],
       },
       imageFile: null,
-      previewImage: '',
+      previewImage: "",
       response: null,
-      errors: {}
+      errors: {},
+      showDeleteModal: false,
+      roadToDeleteIndex: null,
     };
   },
   methods: {
+    // Altre funzioni esistenti...
     normalizeDate(dateString) {
       const date = new Date(dateString);
       return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -152,18 +213,32 @@ export default {
     },
     addRoad() {
       this.form.roads.push({
-        name: '',
-        description: '',
-        start_date: '',
-        end_date: '',
+        name: "",
+        description: "",
+        start_date: "",
+        end_date: "",
         rate: 0,
-        note: '',
-        previewImage: '',
-        imageFile: null
+        note: "",
+        previewImage: "",
+        imageFile: null,
       });
     },
     setRoadRating(index, rating) {
       this.form.roads[index].rate = rating;
+    },
+    openDeleteModal(index) {
+      this.roadToDeleteIndex = index;
+      this.showDeleteModal = true;
+    },
+    closeDeleteModal() {
+      this.roadToDeleteIndex = null;
+      this.showDeleteModal = false;
+    },
+    deleteRoad() {
+      if (this.roadToDeleteIndex !== null) {
+        this.form.roads.splice(this.roadToDeleteIndex, 1);
+        this.closeDeleteModal();
+      }
     },
     validateForm() {
       let isValid = true;
@@ -192,6 +267,14 @@ export default {
         this.errors.end_date = "End Date must be after Start Date.";
         isValid = false;
       }
+      if(this.form.imageFile != ".png" && this.form.imageFile != ".jpg" && this.form.imageFile != ".jpeg" && this.form.imageFile != ".gif"){
+        this.errors.image = "Image must be a .png, .jpg, .jpeg or .gif file.";
+        isValid = false;
+      }
+      if(his.form.imageFile > 2048 * 1024) {
+        this.errors.image = "Image must be less than 2MB.";
+        isValid = false;
+        }
 
       // Validate Roads
       const roadErrors = this.validateRoads(travelStartDate, travelEndDate);
@@ -213,18 +296,29 @@ export default {
           roadErrors[`road_${index}_name`] = "Road Name is required.";
         }
         if (!road.start_date) {
-          roadErrors[`road_${index}_start_date`] = "Road Start Date is required.";
+          roadErrors[`road_${index}_start_date`] =
+            "Road Start Date is required.";
         } else if (roadStartDate < travelStartDate) {
-          roadErrors[`road_${index}_start_date`] = "Road Start Date cannot be before the Travel Start Date.";
+          roadErrors[`road_${index}_start_date`] =
+            "Road Start Date cannot be before the Travel Start Date.";
         } else if (roadStartDate > travelEndDate) {
-          roadErrors[`road_${index}_start_date`] = "Road Start Date cannot be after the Travel End Date.";
+          roadErrors[`road_${index}_start_date`] =
+            "Road Start Date cannot be after the Travel End Date.";
         }
         if (!road.end_date) {
           roadErrors[`road_${index}_end_date`] = "Road End Date is required.";
         } else if (roadEndDate < roadStartDate) {
-          roadErrors[`road_${index}_end_date`] = "Road End Date must be after Road Start Date.";
+          roadErrors[`road_${index}_end_date`] =
+            "Road End Date must be after Road Start Date.";
         } else if (roadEndDate > travelEndDate) {
-          roadErrors[`road_${index}_end_date`] = "Road End Date cannot be after the Travel End Date.";
+          roadErrors[`road_${index}_end_date`] =
+            "Road End Date cannot be after the Travel End Date.";
+        }
+        if(road.imageFile > 2048 * 1024) {
+          roadErrors[`road_${index}_imageFile`] = "File size cannot exceed 2MB.";
+        }
+        if(road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
+          roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
         }
       });
 
@@ -232,9 +326,12 @@ export default {
     },
     scrollToFirstError() {
       this.$nextTick(() => {
-        const firstErrorElement = this.$el.querySelector('.error-message');
+        const firstErrorElement = this.$el.querySelector(".error-message");
         if (firstErrorElement) {
-          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstErrorElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }
       });
     },
@@ -245,14 +342,14 @@ export default {
       }
 
       const formData = new FormData();
-      formData.append('name', this.form.name);
-      formData.append('description', this.form.description);
-      formData.append('start_date', this.form.start_date);
-      formData.append('end_date', this.form.end_date);
-      formData.append('meal', this.form.meal);
-      formData.append('curiosity', this.form.curiosity);
+      formData.append("name", this.form.name);
+      formData.append("description", this.form.description);
+      formData.append("start_date", this.form.start_date);
+      formData.append("end_date", this.form.end_date);
+      formData.append("meal", this.form.meal);
+      formData.append("curiosity", this.form.curiosity);
       if (this.imageFile) {
-        formData.append('image', this.imageFile);
+        formData.append("image", this.imageFile);
       }
 
       this.form.roads.forEach((road, index) => {
@@ -268,41 +365,57 @@ export default {
       });
 
       try {
-        const res = await fetch(this.store.api.baseUrl + 'travel', {
-          method: 'POST',
+        const res = await fetch(this.store.api.baseUrl + "travel", {
+          method: "POST",
           headers: {
-            'Accept': 'application/json'
+            Accept: "application/json",
           },
-          body: formData
+          body: formData,
         });
         const data = await res.json();
         if (res.ok) {
-          this.response = 'Travel added successfully!';
-          this.$router.push('/');  // Redirect to home
+          this.response = "Travel added successfully!";
+          this.$router.push("/"); // Redirect to home
         } else {
-          this.response = 'Error adding travel!';
+          this.response = "Error adding travel!";
         }
         console.log(data);
       } catch (error) {
-        this.response = 'Error adding travel!';
+        this.response = "Error adding travel!";
         console.error(error);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-
-
-
-
-
 <style lang="scss" scoped>
+.delete-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+  max-width: 500px;
+}
+
 .error-message {
   color: red;
   font-size: 0.875rem;
   margin-top: 5px;
 }
+
 .image-preview {
   margin-top: 10px;
   width: 150px;
@@ -319,7 +432,7 @@ export default {
 }
 
 .form-container {
-  width: 800px;  // Increased width
+  width: 800px; // Increased width
   margin: 0 auto;
   padding: 20px;
   background-color: #f9f9f9;
@@ -336,6 +449,16 @@ export default {
   margin-bottom: 15px;
 }
 
+.form-group-horizontal {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-group-horizontal .form-group {
+  width: 48%;
+}
+
 label {
   font-weight: bold;
   margin-bottom: 5px;
@@ -347,7 +470,7 @@ textarea,
 input[type="date"],
 input[type="file"] {
   width: 100%;
-  padding: 12px;  // Increased padding
+  padding: 12px; // Increased padding
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -356,8 +479,8 @@ input[type="file"] {
 }
 
 textarea {
-  height: 100px;  // Increased height for better readability
-  resize: vertical;  // Allow vertical resizing
+  height: 100px; // Increased height for better readability
+  resize: vertical; // Allow vertical resizing
 }
 
 .star-rating {
@@ -366,20 +489,20 @@ textarea {
 }
 
 .star {
-  font-size: 24px;  // Increased star size
-  color: #d3d3d3;  // Light grey for empty stars
+  font-size: 24px; // Increased star size
+  color: #d3d3d3; // Light grey for empty stars
   cursor: pointer;
   margin-right: 5px;
 }
 
 .star.filled {
-  color: gold;  // Gold color for filled stars
+  color: gold; // Gold color for filled stars
 }
 
 .btn-primary {
   background-color: #007bff;
   color: white;
-  padding: 12px 20px;  // Increased padding
+  padding: 12px 20px; // Increased padding
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -394,7 +517,7 @@ textarea {
 .btn-success {
   background-color: #28a745;
   color: white;
-  padding: 12px 20px;  // Increased padding
+  padding: 12px 20px; // Increased padding
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -405,10 +528,66 @@ textarea {
   background-color: #218838;
 }
 
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  padding: 12px 20px; // Increased padding
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 12px 20px; // Increased padding
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
 .response-message {
-  margin-top: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #007bff;
+  color: white;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .form-group-horizontal {
+    flex-direction: column;
+  }
+
+  .form-group-horizontal .form-group {
+    width: 100%;
+  }
+
+  .btn-primary,
+  .btn-success,
+  .btn-danger,
+  .btn-secondary {
+    padding: 10px;
+    font-size: 14px;
+  }
 }
 </style>

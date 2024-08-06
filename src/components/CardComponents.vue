@@ -15,32 +15,29 @@
         <div v-if="selectedTravel" class="modal" @click.self="closeModal">
             <div class="modal-content">
                 <span class="close" @click="closeModal">&times;</span>
-                <h2>Travel</h2>
-                <p><strong>Name:</strong> {{ selectedTravel.name }}</p>
+                <h2>{{ selectedTravel.name }}</h2>
+                <div class="image-container">
+                    <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy" class="modal-img-top">
+                </div>
                 <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
                 <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
                 <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
-                <p><strong>Image:</strong></p>
-                <div class="image-container">
-                    <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy"
-                        class="card-img-top">
-                </div>
                 <p><strong>Meal:</strong> {{ selectedTravel.meal }}</p>
                 <p><strong>Curiosity:</strong> {{ selectedTravel.curiosity }}</p>
-                <div v-for="road in selectedTravel.road" :key="road.id">
-                    <p><strong>Road Name:</strong> {{ road.name }}</p>
-                    <p><strong>Road Description:</strong> {{ road.description }}</p>
-                    <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
-                    <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
-                    <p><strong>Road Image:</strong></p>
-                    <div class="image-container">
-                    <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy"
-                        class="card-img-top">
-                    </div> 
-                    <p><strong>Road Rate:</strong> {{ road.rate }}</p>
-                    <p><strong>Road Note:</strong> {{ road.note }}</p>
+                <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
+                    <div class="road-info">
+                        <h3>Road {{ index + 1 }} </h3>
+                        <p><strong>Road Name:</strong> {{ road.name }}</p>
+                        <p><strong>Road Description:</strong> {{ road.description }}</p>
+                        <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
+                        <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
+                        <p><strong>Road Rate:</strong> <span v-html="generateStars(road.rate)"></span></p>
+                        <p><strong>Road Note:</strong> {{ road.note }}</p>
+                    </div>
+                    <div class="road-image">
+                        <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy" class="card-img-top">
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -66,11 +63,11 @@ export default {
     },
     methods: {
         showModal(travel) {
-            this.selectedTravel = { ...travel, road: { ...travel.road } };
+            this.selectedTravel = { ...travel, road: [...travel.road] };
             this.previewImage = this.getImage;
         },
-        roadImage(img){
-            return  img ? `${this.store.api.imgBasePath}${img}` : this.defaultImg;
+        roadImage(img) {
+            return img ? `${this.store.api.imgBasePath}${img}` : this.defaultImg;
         },
         closeModal() {
             this.selectedTravel = null;
@@ -78,11 +75,16 @@ export default {
         handleImgError(event) {
             event.target.src = this.defaultImg;
         },
+        generateStars(rate) {
+            let stars = '';
+            for (let i = 0; i < 5; i++) {
+                stars += i < rate ? '<span class="star filled">★</span>' : '<span class="star empty">☆</span>';
+            }
+            return stars;
+        }
     }
 }
 </script>
-
-
 
 <style lang="scss" scoped>
 .image-preview {
@@ -119,12 +121,20 @@ export default {
     border-radius: 5px;
     width: 1000px;
     max-width: 100%;
+    max-height: 95%;
+    overflow-y: auto;
 }
 
 .close {
     float: right;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+.modal-img-top {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
 }
 
 .card {
@@ -179,5 +189,39 @@ export default {
             }
         }
     }
+}
+
+.road-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .road-info {
+        flex: 1;
+        padding-right: 20px;
+    }
+
+    .road-image {
+        flex-shrink: 0;
+        width: 350px;
+        height: 200px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    }
+}
+
+.star {
+    font-size: 1.5rem;
+    color: gold;
+}
+
+.star.empty {
+    color: transparent;
+    -webkit-text-stroke: 1px gold;
 }
 </style>

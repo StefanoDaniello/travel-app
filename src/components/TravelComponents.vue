@@ -59,10 +59,10 @@
       <!-- Roads Section -->
       <div v-for="(road, index) in form.roads" :key="index" class="road-group">
         <div class="d-flex align-items-center mb-3">
-          <h3 class="mx-2">Road {{ index + 1 }}</h3>
-          <button v-if="index + 1 > 1" class="btn btn-danger btn-sm" @click="openDeleteModal(index)">
+          <button v-if="index + 1 > 1" type="button" class="btn btn-danger" @click="openDeleteModal(index)">
             x
           </button>
+          <h3 class="mx-2">Road {{ index + 1 }}</h3>
         </div>
 
         <div class="form-group">
@@ -146,10 +146,10 @@
         <p>Vuoi davvero cancellare questa rotta?</p>
         <div class="d-flex justify-content-center">
           <button class="btn btn-danger mx-1" @click="deleteRoad">
-            Delete
+            Elimina
           </button>
           <button class="btn btn-secondary mx-1" @click="closeDeleteModal">
-            Cancel
+            Annulla
           </button>
         </div>
       </div>

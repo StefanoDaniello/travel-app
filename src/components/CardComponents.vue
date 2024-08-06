@@ -78,7 +78,7 @@ export default {
         generateStars(rate) {
             let stars = '';
             for (let i = 0; i < 5; i++) {
-                stars += i < rate ? '<span class="star filled">★</span>' : '<span class="star empty">☆</span>';
+                stars += i < rate ? '<span class="star filled" style="color: gold ; font-size: 1.5rem ">★</span>' : '<span class="star empty" style="color: transparent ; -webkit-text-stroke: 0.5px gold; font-size: 1.5rem;">☆</span>';
             }
             return stars;
         }
@@ -118,11 +118,33 @@ export default {
 .modal-content {
     background-color: #fff;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     width: 1000px;
     max-width: 100%;
     max-height: 95%;
     overflow-y: auto;
+}
+    
+
+/* Custom scrollbar styles */
+.modal-content::-webkit-scrollbar {
+    width: 12px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background-color: #f5f5f5; /* Remove background of the scrollbar track */
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Customize the color of the scrollbar thumb */
+    border-radius: 10px;
+    border: 3px solid transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa; /* Color when hovered */
 }
 
 .close {
@@ -213,15 +235,5 @@ export default {
             border-radius: 10px;
         }
     }
-}
-
-.star {
-    font-size: 1.5rem;
-    color: gold;
-}
-
-.star.empty {
-    color: transparent;
-    -webkit-text-stroke: 1px gold;
 }
 </style>

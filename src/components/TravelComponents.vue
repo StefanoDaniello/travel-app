@@ -282,7 +282,7 @@ export default {
         this.errors.image = "Image must be a .png, .jpg, .jpeg or .gif file.";
         isValid = false;
       }
-      if (his.form.imageFile > 2048 * 1024) {
+      if (this.form.imageFile > 2048 * 1024) {
         this.errors.image = "Image must be less than 2MB.";
         isValid = false;
       }

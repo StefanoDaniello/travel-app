@@ -386,7 +386,11 @@ export default {
         const data = await res.json();
         if (res.ok) {
           this.response = "Travel added successfully!";
-          this.$router.push("/"); // Redirect to home
+          this.$router.push('/')
+          .then(() => {
+            window.location.reload(); // Forza il refresh della pagina
+          })
+          .catch(err => console.error("Error while redirecting:", err));
         } else {
           this.response = "Error adding travel!";
         }

@@ -1,9 +1,11 @@
 <template>
   <div class="form-container">
     <form @submit.prevent="submitForm" class="travel-form">
+      <!-- Travel Form Fields -->
       <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" id="name" v-model="form.name" required>
+        <input type="text" id="name" v-model="form.name">
+        <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
       </div>
       <div class="form-group">
         <label for="description">Description:</label>
@@ -11,11 +13,13 @@
       </div>
       <div class="form-group">
         <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" v-model="form.start_date" required>
+        <input type="date" id="start_date" v-model="form.start_date">
+        <span v-if="errors.start_date" class="error-message">{{ errors.start_date }}</span>
       </div>
       <div class="form-group">
         <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" v-model="form.end_date" required>
+        <input type="date" id="end_date" v-model="form.end_date">
+        <span v-if="errors.end_date" class="error-message">{{ errors.end_date }}</span>
       </div>
       <div class="form-group">
         <label for="image">Image:</label>
@@ -33,11 +37,13 @@
         <textarea id="curiosity" v-model="form.curiosity"></textarea>
       </div>
 
+      <!-- Roads Section -->
       <div v-for="(road, index) in form.roads" :key="index" class="road-group">
         <h3>Road {{ index + 1 }}</h3>
         <div class="form-group">
           <label :for="'road_name_' + index">Road Name:</label>
-          <input type="text" :id="'road_name_' + index" v-model="road.name" required>
+          <input type="text" :id="'road_name_' + index" v-model="road.name">
+          <span v-if="errors[`road_${index}_name`] " class="error-message">{{ errors[`road_${index}_name`] }}</span>
         </div>
         <div class="form-group">
           <label :for="'road_description_' + index">Road Description:</label>
@@ -45,11 +51,13 @@
         </div>
         <div class="form-group">
           <label :for="'road_start_date_' + index">Road Start Date:</label>
-          <input type="date" :id="'road_start_date_' + index" v-model="road.start_date" required>
+          <input type="date" :id="'road_start_date_' + index" v-model="road.start_date">
+          <span v-if="errors[`road_${index}_start_date`] " class="error-message">{{ errors[`road_${index}_start_date`] }}</span>
         </div>
         <div class="form-group">
           <label :for="'road_end_date_' + index">Road End Date:</label>
-          <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" required>
+          <input type="date" :id="'road_end_date_' + index" v-model="road.end_date">
+          <span v-if="errors[`road_${index}_end_date`] " class="error-message">{{ errors[`road_${index}_end_date`] }}</span>
         </div>
         <div class="form-group">
           <label :for="'road_image_' + index">Road Image:</label>
@@ -60,7 +68,11 @@
         </div>
         <div class="form-group">
           <label :for="'road_rate_' + index">Road Rate:</label>
-          <input type="number" :id="'road_rate_' + index" v-model="road.rate" required>
+          <div class="star-rating">
+            <span v-for="star in 5" :key="star" class="star"
+                  :class="{ filled: star <= road.rate }"
+                  @click="setRoadRating(index, star)">&#9733;</span>
+          </div>
         </div>
         <div class="form-group">
           <label :for="'road_note_' + index">Road Note:</label>
@@ -68,12 +80,13 @@
         </div>
       </div>
 
+      <!-- Buttons -->
       <div class="form-group">
         <button type="button" class="btn btn-primary mx-3 text-white" @click="addRoad">Add Road</button>
         <button type="submit" class="btn btn-success text-white">Add Travel</button>
       </div>
     </form>
-    <div v-if="response" class="response-message">
+    <div v-if="response" class="response-message" ref="responseMessage">
       <p>{{ response }}</p>
     </div>
   </div>
@@ -108,11 +121,16 @@ export default {
         ]
       },
       imageFile: null,
-      response: null,
       previewImage: '',
-    }
+      response: null,
+      errors: {}
+    };
   },
   methods: {
+    normalizeDate(dateString) {
+      const date = new Date(dateString);
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    },
     handleFileUpload(event) {
       this.imageFile = event.target.files[0];
       if (this.imageFile) {
@@ -144,7 +162,88 @@ export default {
         imageFile: null
       });
     },
+    setRoadRating(index, rating) {
+      this.form.roads[index].rate = rating;
+    },
+    validateForm() {
+      let isValid = true;
+      this.errors = {};
+
+      // Normalize travel dates
+      const travelStartDate = this.normalizeDate(this.form.start_date);
+      const travelEndDate = this.normalizeDate(this.form.end_date);
+
+      // Validate Travel
+      if (!this.form.name) {
+        this.errors.name = "Name is required.";
+        isValid = false;
+      }
+      if (!this.form.start_date) {
+        this.errors.start_date = "Start Date is required.";
+        isValid = false;
+      } else if (travelStartDate < this.normalizeDate(new Date())) {
+        this.errors.start_date = "Start Date cannot be in the past.";
+        isValid = false;
+      }
+      if (!this.form.end_date) {
+        this.errors.end_date = "End Date is required.";
+        isValid = false;
+      } else if (travelStartDate && travelEndDate < travelStartDate) {
+        this.errors.end_date = "End Date must be after Start Date.";
+        isValid = false;
+      }
+
+      // Validate Roads
+      const roadErrors = this.validateRoads(travelStartDate, travelEndDate);
+      if (Object.keys(roadErrors).length > 0) {
+        isValid = false;
+      }
+      this.errors = { ...this.errors, ...roadErrors };
+
+      return isValid;
+    },
+    validateRoads(travelStartDate, travelEndDate) {
+      let roadErrors = {};
+
+      this.form.roads.forEach((road, index) => {
+        const roadStartDate = this.normalizeDate(road.start_date);
+        const roadEndDate = this.normalizeDate(road.end_date);
+
+        if (!road.name) {
+          roadErrors[`road_${index}_name`] = "Road Name is required.";
+        }
+        if (!road.start_date) {
+          roadErrors[`road_${index}_start_date`] = "Road Start Date is required.";
+        } else if (roadStartDate < travelStartDate) {
+          roadErrors[`road_${index}_start_date`] = "Road Start Date cannot be before the Travel Start Date.";
+        } else if (roadStartDate > travelEndDate) {
+          roadErrors[`road_${index}_start_date`] = "Road Start Date cannot be after the Travel End Date.";
+        }
+        if (!road.end_date) {
+          roadErrors[`road_${index}_end_date`] = "Road End Date is required.";
+        } else if (roadEndDate < roadStartDate) {
+          roadErrors[`road_${index}_end_date`] = "Road End Date must be after Road Start Date.";
+        } else if (roadEndDate > travelEndDate) {
+          roadErrors[`road_${index}_end_date`] = "Road End Date cannot be after the Travel End Date.";
+        }
+      });
+
+      return roadErrors;
+    },
+    scrollToFirstError() {
+      this.$nextTick(() => {
+        const firstErrorElement = this.$el.querySelector('.error-message');
+        if (firstErrorElement) {
+          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    },
     async submitForm() {
+      if (!this.validateForm()) {
+        this.scrollToFirstError();
+        return;
+      }
+
       const formData = new FormData();
       formData.append('name', this.form.name);
       formData.append('description', this.form.description);
@@ -179,7 +278,7 @@ export default {
         const data = await res.json();
         if (res.ok) {
           this.response = 'Travel added successfully!';
-          this.$router.push('/');  // Reindirizzamento alla rotta /
+          this.$router.push('/');  // Redirect to home
         } else {
           this.response = 'Error adding travel!';
         }
@@ -194,7 +293,16 @@ export default {
 </script>
 
 
+
+
+
+
 <style lang="scss" scoped>
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
 .image-preview {
   margin-top: 10px;
   width: 150px;
@@ -211,7 +319,7 @@ export default {
 }
 
 .form-container {
-  width: 600px;  // Increased width
+  width: 800px;  // Increased width
   margin: 0 auto;
   padding: 20px;
   background-color: #f9f9f9;
@@ -236,7 +344,8 @@ label {
 
 input[type="text"],
 textarea,
-input[type="datetime-local"] {
+input[type="date"],
+input[type="file"] {
   width: 100%;
   padding: 12px;  // Increased padding
   margin-top: 5px;
@@ -246,7 +355,43 @@ input[type="datetime-local"] {
   font-size: 16px;
 }
 
-.btn-submit {
+textarea {
+  height: 100px;  // Increased height for better readability
+  resize: vertical;  // Allow vertical resizing
+}
+
+.star-rating {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.star {
+  font-size: 24px;  // Increased star size
+  color: #d3d3d3;  // Light grey for empty stars
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.star.filled {
+  color: gold;  // Gold color for filled stars
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;  // Increased padding
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-success {
   background-color: #28a745;
   color: white;
   padding: 12px 20px;  // Increased padding
@@ -256,7 +401,7 @@ input[type="datetime-local"] {
   font-size: 16px;
 }
 
-.btn-submit:hover {
+.btn-success:hover {
   background-color: #218838;
 }
 
@@ -264,6 +409,6 @@ input[type="datetime-local"] {
   margin-top: 20px;
   font-size: 18px;
   font-weight: bold;
+  color: #333;
 }
 </style>
-

@@ -19,11 +19,11 @@
                 <div class="image-container">
                     <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy" class="modal-img-top">
                 </div>
-                <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
                 <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
                 <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
                 <p><strong>Meal:</strong> {{ selectedTravel.meal }}</p>
                 <p><strong>Curiosity:</strong> {{ selectedTravel.curiosity }}</p>
+                <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
                 <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
                     <div class="road-info">
                         <h3>Road {{ index + 1 }} </h3>
@@ -157,6 +157,7 @@ export default {
     width: 100%;
     max-height: 300px;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .card {

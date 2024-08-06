@@ -52,10 +52,25 @@
                                 class="card-img-top">
                         </div>
                     </div>
-                    <div >
-                        <button type="submit" class="btn-submit">Save Changes</button>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success text-white">Save Changes</button>
+                        <button type="button" class="btn btn-danger" @click="DeteleModal">Delete</button>
                     </div>
                 </form>
+                <div v-if="io==1">
+                    <div class="modal" @click.self="closeDeteleModal">
+                        <div class="modal-detele-content">
+                            <span class="close" @click="closeDeteleModal">&times;</span>
+                            <form @submit.prevent="submitDelete">
+                                <h2>Delete Confirmation</h2>
+                                <p>Are you sure you want to delete this travel?</p>
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -72,6 +87,7 @@ export default {
             selectedTravel: null,
             previewImage: '',
             defaultImg: '/images/placeholder.png',
+            io: null
         };
     },
     computed: {
@@ -80,13 +96,19 @@ export default {
         },
     },
     methods: {
+        closeDeteleModal() {
+            this.io = 0;
+        },
+        DeteleModal() {
+          this.io = 1;  
+        },
         setRoadRating(index, rating) {
             this.selectedTravel.road[index].rate = rating;
         },
         showModal(travel) {
             this.selectedTravel = { ...travel, road: [...travel.road] };
             this.previewImage = this.getImage;
-            console.log(this.selectedTravel);
+            // console.log(this.selectedTravel);
         },
         roadImage(img) {
             return img ? `${this.store.api.imgBasePath}${img}` : this.defaultImg;
@@ -127,6 +149,25 @@ export default {
                 this.response = 'Error updating travel!';
                 console.error(error);
             }
+        },
+        async submitDelete() {
+            try {
+                const res = await fetch(`${this.store.api.baseUrl}travel/${this.selectedTravel.slug}`, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    this.response = 'Travel deleted successfully!';
+                    this.closeModal();
+                    window.location.reload();
+                } else {
+                    this.response = 'Error deleting travel!';
+                }
+                console.log(data);
+            } catch (error) {
+                this.response = 'Error deleting travel!';
+                console.error(error);
+            }
         }
     }
 }
@@ -139,7 +180,6 @@ export default {
   cursor: pointer;
   margin-right: 5px;
 }
-
 .star.filled {
   color: gold; // Gold color for filled stars
 }
@@ -183,7 +223,15 @@ export default {
     max-height: 95%;
     overflow-y: auto;
 }
-
+.modal-detele-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 500px;
+    max-width: 100%;
+    max-height: 95%;
+    overflow-y: auto;
+}
 
 /* Custom scrollbar styles */
 .modal-content::-webkit-scrollbar {

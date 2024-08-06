@@ -27,13 +27,17 @@
 
       <div class="form-group">
         <label for="image">Image:</label>
-        <input type="file" id="image" @change="handleFileUpload" />
-        <div class="image-preview" v-if="previewImage">
-          <img :src="previewImage || store.api.defaultImg" @error="setDefaultImg" alt="Image preview" />
+        <div>
+          <input type="file" id="image" @change="handleFileUpload" class="d-none" />
+          <label for="image" class="btn btn-primary btn-img">Choose Image</label>
+          <div class="image-preview" v-if="previewImage">
+            <img :src="previewImage || store.api.defaultImg" @error="setDefaultImg" alt="Image preview" />
+          </div>
+          <div v-else class="image-preview">
+            <img :src="store.api.defaultImg" alt="Default image preview" />
+          </div>
         </div>
-        <div v-else class="image-preview">
-          <img :src="store.api.defaultImg" alt="Default image preview" />
-        </div>
+
         <span v-if="errors.image" class="error-message">{{ errors.image }}</span>
       </div>
 
@@ -86,16 +90,23 @@
 
         <div class="form-group">
           <label :for="'road_image_' + index">Road Image:</label>
-          
+
           <div class="d-flex">
-            <input type="file" :id="'road_image_' + index" @change="(event) => handleRoadFileUpload(event, index)" />
-            <div class="image-preview" v-if="road.previewImage">
-              <img :src="road.previewImage || store.api.defaultImg" @error="setDefaultRoadImg"
-                alt="Road image preview" />
+            <input type="file" :id="'road_image_' + index" @change="(event) => handleRoadFileUpload(event, index)"
+              class="d-none" />
+            <div>
+              <label :for="'road_image_' + index" class="btn btn-primary btn-img">Choose Image</label>
+              <div class="image-preview" v-if="road.previewImage">
+                <img :src="road.previewImage || store.api.defaultImg" @error="setDefaultRoadImg"
+                  alt="Road image preview" />
+              </div>
+              <div v-else class="image-preview">
+                <img :src="store.api.defaultImg" alt="Default image preview" />
+              </div>
             </div>
-            <div v-else class="image-preview">
-              <img :src="store.api.defaultImg" alt="Default image preview" />
-            </div>
+
+
+
           </div>
           <span v-if="errors[`road_${index}_image`]" class="error-message">{{
             errors[`road_${index}_image`]
@@ -267,14 +278,14 @@ export default {
         this.errors.end_date = "End Date must be after Start Date.";
         isValid = false;
       }
-      if(this.form.imageFile != ".png" && this.form.imageFile != ".jpg" && this.form.imageFile != ".jpeg" && this.form.imageFile != ".gif"){
+      if (this.form.imageFile != ".png" && this.form.imageFile != ".jpg" && this.form.imageFile != ".jpeg" && this.form.imageFile != ".gif") {
         this.errors.image = "Image must be a .png, .jpg, .jpeg or .gif file.";
         isValid = false;
       }
-      if(his.form.imageFile > 2048 * 1024) {
+      if (his.form.imageFile > 2048 * 1024) {
         this.errors.image = "Image must be less than 2MB.";
         isValid = false;
-        }
+      }
 
       // Validate Roads
       const roadErrors = this.validateRoads(travelStartDate, travelEndDate);
@@ -314,10 +325,10 @@ export default {
           roadErrors[`road_${index}_end_date`] =
             "Road End Date cannot be after the Travel End Date.";
         }
-        if(road.imageFile > 2048 * 1024) {
+        if (road.imageFile > 2048 * 1024) {
           roadErrors[`road_${index}_imageFile`] = "File size cannot exceed 2MB.";
         }
-        if(road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
+        if (road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
           roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
         }
       });
@@ -390,6 +401,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.btn-img {
+  width: 370px;
+}
+
 .delete-modal {
   position: fixed;
   top: 0;
@@ -418,8 +433,8 @@ export default {
 
 .image-preview {
   margin-top: 10px;
-  width: 150px;
-  height: 150px;
+  width: 370px;
+  height: 350px;
   border: 1px solid #ccc;
   display: flex;
   justify-content: center;

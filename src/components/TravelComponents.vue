@@ -4,21 +4,21 @@
       <!-- Travel Form Fields -->
       <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" id="name" v-model="form.name" />
+        <input type="text" id="name" v-model="form.name" class="form-control" required />
         <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
       </div>
 
       <div class="form-group-horizontal">
         <div class="form-group">
           <label for="start_date">Start Date:</label>
-          <input type="date" id="start_date" v-model="form.start_date" />
+          <input type="date" id="start_date" v-model="form.start_date" class="form-control" required />
           <span v-if="errors.start_date" class="error-message">{{
             errors.start_date
           }}</span>
         </div>
         <div class="form-group">
           <label for="end_date">End Date:</label>
-          <input type="date" id="end_date" v-model="form.end_date" />
+          <input type="date" id="end_date" v-model="form.end_date" class="form-control" required />
           <span v-if="errors.end_date" class="error-message">{{
             errors.end_date
           }}</span>
@@ -31,10 +31,10 @@
             <div>
               <input type="file" id="image" @change="handleFileUpload" class="d-none" />
               <label for="image" class="btn btn-primary ms-2">Choose Image</label>
-              <div class="image-preview" v-if="previewImage">
+              <div class="image-preview mt-3" v-if="previewImage">
                 <img :src="previewImage || store.api.defaultImg" @error="setDefaultImg" alt="Image preview" />
               </div>
-              <div v-else class="image-preview">
+              <div v-else class="image-preview mt-3">
                 <img :src="store.api.defaultImg" alt="Default image preview" />
               </div>
 
@@ -43,17 +43,17 @@
           </div>
 
           <div class="col-6	">
-            <label for="luogo">Luogo:</label>
             <!-- <input type="text" id="luogo" class="form-control"> -->
             <div class="address d-flex justify-content-center flex-column">
+              <span for="luogo"><strong>Luogo:</strong></span> 
               <div class="d-flex align-content-center">
-                <input class="" type="text" id="address" name="address" v-model="form.luogo" required maxlength="255"
+                <input class="h-25 mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo" required maxlength="255"
                   minlength="7">
               </div>
               <!-- <div id="adreesResult"></div> -->
               <div id="resultsContainer" class="results-container"></div>
             </div>
-            <div id="map" style="width: 100%; height: 400px;"></div>
+            <div id="map" style="width: 100%; height: 350px;"></div>
           </div>
 
         </div>
@@ -62,17 +62,17 @@
 
       <div class="form-group">
         <label for="description">Description:</label>
-        <textarea id="description" v-model="form.description"></textarea>
+        <textarea id="description" v-model="form.description" class="form-control"></textarea>
       </div>
 
       <div class="form-group">
         <label for="meal">Meal:</label>
-        <textarea id="meal" v-model="form.meal"></textarea>
+        <textarea id="meal" v-model="form.meal" class="form-control"></textarea>
       </div>
 
       <div class="form-group">
         <label for="curiosity">Curiosity:</label>
-        <textarea id="curiosity" v-model="form.curiosity"></textarea>
+        <textarea id="curiosity" v-model="form.curiosity" class="form-control"></textarea>
       </div>
 
 
@@ -88,7 +88,7 @@
 
         <div class="form-group">
           <label :for="'road_name_' + index">Road Name:</label>
-          <input type="text" :id="'road_name_' + index" v-model="road.name" />
+          <input type="text" :id="'road_name_' + index" v-model="road.name" class="form-control" required/>
           <span v-if="errors[`road_${index}_name`]" class="error-message">{{
             errors[`road_${index}_name`]
           }}</span>
@@ -97,13 +97,13 @@
         <div class="form-group-horizontal">
           <div class="form-group">
             <label :for="'road_start_date_' + index">Road Start Date:</label>
-            <input type="date" :id="'road_start_date_' + index" v-model="road.start_date" />
+            <input type="date" :id="'road_start_date_' + index" v-model="road.start_date"  class="form-control" required/>
             <span v-if="errors[`road_${index}_start_date`]" class="error-message">{{ errors[`road_${index}_start_date`]
               }}</span>
           </div>
           <div class="form-group">
             <label :for="'road_end_date_' + index">Road End Date:</label>
-            <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" />
+            <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" class="form-control" required/>
             <span v-if="errors[`road_${index}_end_date`]" class="error-message">{{ errors[`road_${index}_end_date`]
               }}</span>
           </div>
@@ -143,7 +143,7 @@
 
         <div class="form-group">
           <label :for="'road_description_' + index">Road Description:</label>
-          <textarea :id="'road_description_' + index" v-model="road.description"></textarea>
+          <textarea :id="'road_description_' + index" v-model="road.description" class="form-control"></textarea>
         </div>
 
         <div class="form-group">
@@ -156,7 +156,7 @@
 
         <div class="form-group">
           <label :for="'road_note_' + index">Road Note:</label>
-          <textarea :id="'road_note_' + index" v-model="road.note"></textarea>
+          <textarea :id="'road_note_' + index" v-model="road.note" class="form-control"></textarea>
         </div>
       </div>
 

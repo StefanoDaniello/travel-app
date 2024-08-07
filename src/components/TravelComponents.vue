@@ -55,12 +55,11 @@
             </div>
             <div id="map" style="width: 100%; height: 350px;"></div>
           </div>
-
         </div>
       </div>
 
 
-      <div class="form-group">
+      <div class="form-group mt-3">
         <label for="description">Description:</label>
         <textarea id="description" v-model="form.description" class="form-control"></textarea>
       </div>
@@ -141,7 +140,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label :for="'road_description_' + index">Road Description:</label>
           <textarea :id="'road_description_' + index" v-model="road.description" class="form-control"></textarea>
         </div>

@@ -44,8 +44,31 @@
 
           <div class="col-6	">
             <label for="luogo">Luogo:</label>
-            <input type="text" id="luogo" v-model="form.luogo" class="form-control">
+            <!-- <input type="text" id="luogo" class="form-control"> -->
+
+
+
+            <div class="address d-flex justify-content-center flex-column">
+              <div class="d-flex mt-3 align-content-center">
+
+                <input class="" type="text" id="address" name="address" v-model="form.luogo" required maxlength="255"
+                  minlength="7">
+                <button id="edit-btn" class="btn-2 ms-3 draw-border-2 mt-3"><i
+                    class="fa-solid fs-4 fa-pencil"></i></button>
+              </div>
+              <div id="adreesResult"></div>
+              <label for="address">*required</label>
+              <div id="resultsContainer" class="results-container"></div>
+
+            </div>
+            <!-- <div id="map" style="width: 100%; height: 400px;"></div> -->
+
+
+
+
+
           </div>
+
         </div>
       </div>
 
@@ -423,11 +446,36 @@ export default {
         console.error(error);
       }
     },
+
+
+
+
+
   },
 };
 </script>
 
 <style lang="scss" scoped>
+#map {
+  width: 100%;
+  height: 400px;
+}
+
+.results-container {
+  border: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.results-container div {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.results-container div:hover {
+  background-color: #f0f0f0;
+}
+
 .delete-modal {
   position: fixed;
   top: 0;

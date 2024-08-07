@@ -24,22 +24,31 @@
           }}</span>
         </div>
       </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <label for="image">Image:</label>
+            <div>
+              <input type="file" id="image" @change="handleFileUpload" class="d-none" />
+              <label for="image" class="btn btn-primary ms-2">Choose Image</label>
+              <div class="image-preview" v-if="previewImage">
+                <img :src="previewImage || store.api.defaultImg" @error="setDefaultImg" alt="Image preview" />
+              </div>
+              <div v-else class="image-preview">
+                <img :src="store.api.defaultImg" alt="Default image preview" />
+              </div>
 
-      <div class="form-group">
-        <label for="image">Image:</label>
-        <div>
-          <input type="file" id="image" @change="handleFileUpload" class="d-none" />
-          <label for="image" class="btn btn-primary btn-img">Choose Image</label>
-          <div class="image-preview" v-if="previewImage">
-            <img :src="previewImage || store.api.defaultImg" @error="setDefaultImg" alt="Image preview" />
+            </div>
+            <span v-if="errors.image" class="error-message">{{ errors.image }}</span>
           </div>
-          <div v-else class="image-preview">
-            <img :src="store.api.defaultImg" alt="Default image preview" />
+
+          <div class="col-6	">
+            <label for="luogo">Luogo:</label>
+            <input type="text" id="luogo" v-model="form.luogo" class="form-control">
           </div>
         </div>
-
-        <span v-if="errors.image" class="error-message">{{ errors.image }}</span>
       </div>
+
 
       <div class="form-group">
         <label for="description">Description:</label>
@@ -55,6 +64,8 @@
         <label for="curiosity">Curiosity:</label>
         <textarea id="curiosity" v-model="form.curiosity"></textarea>
       </div>
+
+
 
       <!-- Roads Section -->
       <div v-for="(road, index) in form.roads" :key="index" class="road-group">
@@ -88,30 +99,42 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label :for="'road_image_' + index">Road Image:</label>
 
-          <div class="d-flex">
-            <input type="file" :id="'road_image_' + index" @change="(event) => handleRoadFileUpload(event, index)"
-              class="d-none" />
-            <div>
-              <label :for="'road_image_' + index" class="btn btn-primary btn-img">Choose Image</label>
-              <div class="image-preview" v-if="road.previewImage">
-                <img :src="road.previewImage || store.api.defaultImg" @error="setDefaultRoadImg"
-                  alt="Road image preview" />
+        <div class="container">
+          <div class="row">
+
+            <div class="col-6">
+              <label :for="'road_image_' + index">Road Image:</label>
+              <div>
+                <input type="file" :id="'road_image_' + index" @change="(event) => handleRoadFileUpload(event, index)"
+                  class="d-none" />
+                <div>
+                  <label :for="'road_image_' + index" class="btn btn-primary ms-2">Choose Image</label>
+                  <div class="image-preview" v-if="road.previewImage">
+                    <img :src="road.previewImage || store.api.defaultImg" @error="setDefaultRoadImg"
+                      alt="Road image preview" />
+                  </div>
+                  <div v-else class="image-preview">
+                    <img :src="store.api.defaultImg" alt="Default image preview" />
+                  </div>
+                </div>
               </div>
-              <div v-else class="image-preview">
-                <img :src="store.api.defaultImg" alt="Default image preview" />
-              </div>
+              <span v-if="errors[`road_${index}_image`]" class="error-message">{{
+                errors[`road_${index}_image`]
+              }}</span>
             </div>
 
-
-
+            <div class="col-6">
+              <label for="via">via:</label>
+              <input type="text" :id="'road_via_' + index" v-model="road.via" class="form-control">
+            </div>
           </div>
-          <span v-if="errors[`road_${index}_image`]" class="error-message">{{
-            errors[`road_${index}_image`]
-          }}</span>
         </div>
+
+
+
+
+
 
         <div class="form-group">
           <label :for="'road_description_' + index">Road Description:</label>
@@ -176,6 +199,7 @@ export default {
         end_date: "",
         meal: "",
         curiosity: "",
+        luogo: "",
         roads: [
           {
             name: "",
@@ -184,6 +208,7 @@ export default {
             end_date: "",
             rate: 0,
             note: "",
+            via: "",
             previewImage: "",
             imageFile: null,
           },
@@ -230,6 +255,7 @@ export default {
         end_date: "",
         rate: 0,
         note: "",
+        via: "",
         previewImage: "",
         imageFile: null,
       });
@@ -359,6 +385,7 @@ export default {
       formData.append("end_date", this.form.end_date);
       formData.append("meal", this.form.meal);
       formData.append("curiosity", this.form.curiosity);
+      formData.append("luogo", this.form.luogo)
       if (this.imageFile) {
         formData.append("image", this.imageFile);
       }
@@ -370,6 +397,7 @@ export default {
         formData.append(`roads[${index}][end_date]`, road.end_date);
         formData.append(`roads[${index}][rate]`, road.rate);
         formData.append(`roads[${index}][note]`, road.note);
+        formData.append(`roads[${index}][via]`, road.via);
         if (road.imageFile) {
           formData.append(`roads[${index}][image]`, road.imageFile);
         }
@@ -387,10 +415,10 @@ export default {
         if (res.ok) {
           this.response = "Travel added successfully!";
           this.$router.push('/')
-          .then(() => {
-            window.location.reload(); // Forza il refresh della pagina
-          })
-          .catch(err => console.error("Error while redirecting:", err));
+            .then(() => {
+              window.location.reload(); // Forza il refresh della pagina
+            })
+            .catch(err => console.error("Error while redirecting:", err));
         } else {
           this.response = "Error adding travel!";
         }
@@ -405,10 +433,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-img {
-  width: 370px;
-}
-
 .delete-modal {
   position: fixed;
   top: 0;
@@ -437,7 +461,6 @@ export default {
 
 .image-preview {
   margin-top: 10px;
-  width: 370px;
   height: 350px;
   border: 1px solid #ccc;
   display: flex;

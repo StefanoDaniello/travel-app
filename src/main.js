@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsContainer = document.getElementById('resultsContainer');
     const apiBaseUrl = 'https://api.tomtom.com/search/2/search/';
     const apiKey = window.apiKey;
+    const mapElement = document.getElementById('map');
+    let map, marker;
 
     // Controlla se l'apiKey è impostata correttamente
     console.log('API Key:', apiKey);
@@ -32,11 +34,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const initializeMap = () => {
+        map = L.map(mapElement).setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    };
+
+    const updateMap = (lat, lon) => {
+        if (marker) {
+            marker.setLatLng([lat, lon]);
+        } else {
+            marker = L.marker([lat, lon]).addTo(map);
+        }
+        map.setView([lat, lon], 15);
+    };
+
     const updateResults = (results) => {
         resultsContainer.innerHTML = '';
         if (results.length) {
             resultsContainer.style.display = 'block';
-            results.forEach(({ address: { freeformAddress } }) => {
+            results.forEach(({ address: { freeformAddress }, position: { lat, lon } }) => {
                 const option = document.createElement('div');
                 option.textContent = freeformAddress;
                 option.addEventListener('click', () => {
@@ -50,6 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         detail: { value: freeformAddress }
                     });
                     addressInput.dispatchEvent(event);
+
+                    // Aggiorna la mappa con le coordinate
+                    updateMap(lat, lon);
                 });
                 resultsContainer.appendChild(option);
             });
@@ -74,4 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsContainer.style.display = 'none';
         }
     });
+
+    // Inizializza la mappa quando la pagina è caricata
+    initializeMap();
 });

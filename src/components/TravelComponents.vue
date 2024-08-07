@@ -46,17 +46,14 @@
             <label for="luogo">Luogo:</label>
             <!-- <input type="text" id="luogo" class="form-control"> -->
             <div class="address d-flex justify-content-center flex-column">
-              <div class="d-flex mt-3 align-content-center">
+              <div class="d-flex align-content-center">
                 <input class="" type="text" id="address" name="address" v-model="form.luogo" required maxlength="255"
                   minlength="7">
-                <button id="edit-btn" class="btn-2 ms-3 draw-border-2 mt-3"><i
-                    class="fa-solid fs-4 fa-pencil"></i></button>
               </div>
-              <div id="adreesResult"></div>
-              <label for="address">*required</label>
+              <!-- <div id="adreesResult"></div> -->
               <div id="resultsContainer" class="results-container"></div>
             </div>
-            <!-- <div id="map" style="width: 100%; height: 400px;"></div> -->
+            <div id="map" style="width: 100%; height: 400px;"></div>
           </div>
 
         </div>

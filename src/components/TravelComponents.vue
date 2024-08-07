@@ -50,7 +50,6 @@
 
             <div class="address d-flex justify-content-center flex-column">
               <div class="d-flex mt-3 align-content-center">
-
                 <input class="" type="text" id="address" name="address" v-model="form.luogo" required maxlength="255"
                   minlength="7">
                 <button id="edit-btn" class="btn-2 ms-3 draw-border-2 mt-3"><i
@@ -218,6 +217,8 @@ export default {
         meal: "",
         curiosity: "",
         luogo: "",
+        latitudine: 0,
+        longitudine: 0,
         roads: [
           {
             name: "",
@@ -227,6 +228,8 @@ export default {
             rate: 0,
             note: "",
             via: "",
+            latitudine: 0,
+            longitudine: 0,
             previewImage: "",
             imageFile: null,
           },
@@ -274,9 +277,12 @@ export default {
         rate: 0,
         note: "",
         via: "",
+        latitudine: 0,
+        longitudine: 0,
         previewImage: "",
         imageFile: null,
       });
+      console.log(this.form.luogo);
     },
     setRoadRating(index, rating) {
       this.form.roads[index].rate = rating;
@@ -403,7 +409,9 @@ export default {
       formData.append("end_date", this.form.end_date);
       formData.append("meal", this.form.meal);
       formData.append("curiosity", this.form.curiosity);
-      formData.append("luogo", this.form.luogo)
+      formData.append("luogo", this.form.luogo);
+      formData.append("latitudine", this.form.latitudine);
+      formData.append("longitudine", this.form.longitudine);
       if (this.imageFile) {
         formData.append("image", this.imageFile);
       }
@@ -416,6 +424,8 @@ export default {
         formData.append(`roads[${index}][rate]`, road.rate);
         formData.append(`roads[${index}][note]`, road.note);
         formData.append(`roads[${index}][via]`, road.via);
+        formData.append(`roads[${index}][latitudine]`, road.latitudine);
+        formData.append(`roads[${index}][longitudine]`, road.longitudine);
         if (road.imageFile) {
           formData.append(`roads[${index}][image]`, road.imageFile);
         }

@@ -21,14 +21,22 @@
                         <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy"
                             class="modal-img-top">
                     </div>
-                    <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
-                    <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
-                    <p><strong>Meal:</strong></p>
-                    <textarea id="meal" v-model="selectedTravel.meal">{{ selectedTravel.meal }}</textarea>
-                    <p><strong>Curiosity:</strong></p>
-                    <textarea id="curiosity"
-                        v-model="selectedTravel.curiosity">{{ selectedTravel.curiosity }}</textarea>
-                    <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
+                            <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
+                            <p><strong>Meal:</strong></p>
+                            <textarea id="meal" v-model="selectedTravel.meal">{{ selectedTravel.meal }}</textarea>
+                            <p><strong>Curiosity:</strong></p>
+                            <textarea id="curiosity"
+                                v-model="selectedTravel.curiosity">{{ selectedTravel.curiosity }}</textarea>
+                            <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
+                        </div>
+                        <div>
+                            <p><strong>Luogo:</strong> {{ selectedTravel.luogo }}</p>
+                        </div>
+                    </div>
+
                     <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
                         <div class="road-info">
                             <h3>Road {{ index + 1 }} </h3>
@@ -36,13 +44,13 @@
                             <p><strong>Road Description:</strong> {{ road.description }}</p>
                             <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
                             <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
-                               
-                                <div class="star-rating">
-                                    <p><strong>Road Rate:</strong></p>
-                                    <span v-for="star in 5" :key="star" class="star"
-                                        :class="{ filled: star <= road.rate }"
-                                        @click="setRoadRating(index, star)">&#9733;</span>
-                                </div>
+                            <p><strong>Road Via:</strong> {{ road.via }}</p>
+
+                            <div class="star-rating">
+                                <p><strong>Road Rate:</strong></p>
+                                <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
+                                    @click="setRoadRating(index, star)">&#9733;</span>
+                            </div>
 
                             <p><strong>Road Note:</strong></p>
                             <textarea id="road_note" v-model="road.note">{{ road.note }}</textarea>
@@ -57,7 +65,7 @@
                         <button type="button" class="btn btn-danger" @click="DeteleModal">Elimina</button>
                     </div>
                 </form>
-                <div v-if="io==1">
+                <div v-if="io == 1">
                     <div class="modal" @click.self="closeDeteleModal">
                         <div class="modal-detele-content">
                             <span class="close" @click="closeDeteleModal">&times;</span>
@@ -100,7 +108,7 @@ export default {
             this.io = 0;
         },
         DeteleModal() {
-          this.io = 1;  
+            this.io = 1;
         },
         setRoadRating(index, rating) {
             this.selectedTravel.road[index].rate = rating;
@@ -175,17 +183,20 @@ export default {
 
 <style lang="scss" scoped>
 .star {
-  font-size: 24px; // Increased star size
-  color: #d3d3d3; // Light grey for empty stars
-  cursor: pointer;
-  margin-right: 5px;
+    font-size: 24px; // Increased star size
+    color: #d3d3d3; // Light grey for empty stars
+    cursor: pointer;
+    margin-right: 5px;
 }
+
 .star.filled {
-  color: gold; // Gold color for filled stars
+    color: gold; // Gold color for filled stars
 }
+
 .star-rating {
- margin-bottom: 10px;
+    margin-bottom: 10px;
 }
+
 .image-preview {
     margin-top: 10px;
     width: 150px;
@@ -223,6 +234,7 @@ export default {
     max-height: 95%;
     overflow-y: auto;
 }
+
 .modal-detele-content {
     background-color: #fff;
     padding: 20px;

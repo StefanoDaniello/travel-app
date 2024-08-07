@@ -44,6 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultsContainer.style.display = 'none';
                     addressResult.style.display = 'block';
                     addressResult.innerHTML = addressInput.value;
+
+                    // Aggiorna il v-model di Vue.js
+                    const event = new CustomEvent('update-v-model', {
+                        detail: { value: freeformAddress }
+                    });
+                    addressInput.dispatchEvent(event);
                 });
                 resultsContainer.appendChild(option);
             });

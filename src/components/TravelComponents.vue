@@ -45,9 +45,6 @@
           <div class="col-6	">
             <label for="luogo">Luogo:</label>
             <!-- <input type="text" id="luogo" class="form-control"> -->
-
-
-
             <div class="address d-flex justify-content-center flex-column">
               <div class="d-flex mt-3 align-content-center">
                 <input class="" type="text" id="address" name="address" v-model="form.luogo" required maxlength="255"
@@ -58,14 +55,8 @@
               <div id="adreesResult"></div>
               <label for="address">*required</label>
               <div id="resultsContainer" class="results-container"></div>
-
             </div>
             <!-- <div id="map" style="width: 100%; height: 400px;"></div> -->
-
-
-
-
-
           </div>
 
         </div>
@@ -201,9 +192,10 @@
   </div>
 </template>
 
+
+
 <script>
 import { store } from "../store";
-
 export default {
   name: "TravelComponent",
   data() {
@@ -242,6 +234,12 @@ export default {
       showDeleteModal: false,
       roadToDeleteIndex: null,
     };
+  },
+  mounted() {
+    const addressInput = document.getElementById('address');
+    addressInput.addEventListener('update-v-model', (event) => {
+      this.form.luogo = event.detail.value;
+    });
   },
   methods: {
     // Altre funzioni esistenti...
@@ -456,11 +454,6 @@ export default {
         console.error(error);
       }
     },
-
-
-
-
-
   },
 };
 </script>

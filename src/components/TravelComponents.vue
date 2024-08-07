@@ -131,11 +131,6 @@
           </div>
         </div>
 
-
-
-
-
-
         <div class="form-group">
           <label :for="'road_description_' + index">Road Description:</label>
           <textarea :id="'road_description_' + index" v-model="road.description"></textarea>

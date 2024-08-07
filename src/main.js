@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 option.addEventListener('click', () => {
                     addressInput.value = freeformAddress;
                     resultsContainer.style.display = 'none';
-                    addressResult.style.display = 'block';
-                    addressResult.innerHTML = addressInput.value;
+                    // addressResult.style.display = 'block';
+                    // addressResult.innerHTML = addressInput.value;
 
                     // Aggiorna il v-model di Vue.js
                     const event = new CustomEvent('update-v-model', {

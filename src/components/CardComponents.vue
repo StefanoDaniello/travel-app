@@ -48,7 +48,10 @@
                             <p><strong>Road Via:</strong> {{ road.via }}</p>
 
                             <div class="star-rating">
-                                <p><strong>Road Rate:</strong></p>
+                                <div>
+                                    <div><strong>Road Rate:</strong></div>
+                                    <small class="text-muted">Click to add a rate</small>
+                                </div>
                                 <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
                                     @click="setRoadRating(index, star)">&#9733;</span>
                             </div>

@@ -45,16 +45,15 @@
 
           <div class="col-6">
             <!-- <input type="text" id="luogo" class="form-control"> -->
-            <div class="address d-flex justify-content-center flex-column">
+            
               <span for="luogo"><strong>Luogo:</strong></span>
-              <div class="d-flex align-content-center">
-                <input class="h-25 mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
+                <input class="mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
                   @input="handleInput" required maxlength="255" minlength="7" />
-              </div>
+             
               <!-- <div id="adreesResult"></div> -->
               <div id="resultsContainer" class="results-container"></div>
-            </div>
-            <div id="map"></div>
+              <div id="map"></div>
+            
           </div>
         </div>
       </div>

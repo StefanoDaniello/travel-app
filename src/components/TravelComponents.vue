@@ -290,6 +290,8 @@ export default {
           option.addEventListener("click", () => {
             this.form.luogo = freeformAddress; // Aggiorna il v-model
             this.updateMap(lat, lon); // Aggiorna la mappa con le coordinate selezionate
+            this.form.latitudine = lat; // Salva la latitudine
+            this.form.longitudine = lon; // Salva la longitudine
             resultsContainer.innerHTML = ""; // Nascondi i risultati dopo la selezione
           });
           resultsContainer.appendChild(option);
@@ -358,6 +360,8 @@ export default {
         option.addEventListener('click', () => {
           this.form.roads[index].via = freeformAddress; // Aggiorna il v-model
           this.updateRoadMap(lat, lon, index); // Aggiorna la mappa con le coordinate selezionate
+          this.form.roads[index].latitudine = lat; // Salva la latitudine
+          this.form.roads[index].longitudine = lon; // Salva la longitudine
           resultsContainer.innerHTML = ''; // Nascondi i risultati dopo la selezione
         });
         resultsContainer.appendChild(option);

@@ -47,13 +47,13 @@
             <div class="address d-flex justify-content-center flex-column">
               <span for="luogo"><strong>Luogo:</strong></span> 
               <div class="d-flex align-content-center">
-                <input class="h-25 mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo" required maxlength="255"
+                <input class="h-25 mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"  @input="handleInput"  required maxlength="255"
                   minlength="7">
               </div>
               <!-- <div id="adreesResult"></div> -->
               <div id="resultsContainer" class="results-container"></div>
             </div>
-            <div id="map" style="width: 100%; height: 350px;"></div>
+            <div id="map" style="width: 100%; height: 350px; z-index: 1;"></div>
           </div>
         </div>
       </div>
@@ -196,6 +196,9 @@ export default {
   name: "TravelComponent",
   data() {
     return {
+      map: null,
+      marker:null,
+      results: [],
       store,
       form: {
         name: "",
@@ -232,12 +235,59 @@ export default {
     };
   },
   mounted() {
-    const addressInput = document.getElementById('address');
-    addressInput.addEventListener('update-v-model', (event) => {
-      this.form.luogo = event.detail.value;
-    });
+    this.initializeMap();
   },
+ 
   methods: {
+    initializeMap() {
+      this.map = L.map('map').setView([0, 0], 2); // Inizializza la mappa centrata su [0, 0]
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(this.map);
+    },
+    updateMap(lat, lon) {
+      if (this.marker) {
+        this.marker.setLatLng([lat, lon]); // Aggiorna la posizione del marker
+      } else {
+        this.marker = L.marker([lat, lon]).addTo(this.map); // Crea un nuovo marker se non esiste
+      }
+      this.map.setView([lat, lon], 15); // Centra la mappa sulle nuove coordinate
+    },
+    async fetchAddresses(query) {
+      const apiBaseUrl = 'https://api.tomtom.com/search/2/search/';
+      const apiKey = 'z3nuCqYtSq2WG00yWsSJx06bIabR9bRc'; // La tua API key
+      try {
+        const response = await fetch(`${apiBaseUrl}${query}.json?key=${apiKey}`);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        return data.results;
+      } catch (error) {
+        console.error('Error fetching the address:', error);
+        return [];
+      }
+    },
+    async handleInput() {
+      const query = this.form.luogo;
+      if (query.length < 5) return;
+
+      this.results = await this.fetchAddresses(query);
+      this.displayResults();
+    },
+    displayResults() {
+      const resultsContainer = document.getElementById('resultsContainer');
+      resultsContainer.innerHTML = '';
+
+      this.results.forEach(({ address: { freeformAddress }, position: { lat, lon } }) => {
+        const option = document.createElement('div');
+        option.textContent = freeformAddress;
+        option.addEventListener('click', () => {
+          this.form.luogo = freeformAddress; // Aggiorna il v-model
+          this.updateMap(lat, lon); // Aggiorna la mappa con le coordinate selezionate
+          resultsContainer.innerHTML = ''; // Nascondi i risultati dopo la selezione
+        });
+        resultsContainer.appendChild(option);
+      });
+    },
     // Altre funzioni esistenti...
     normalizeDate(dateString) {
       const date = new Date(dateString);
@@ -459,21 +509,18 @@ export default {
   width: 100%;
   height: 400px;
 }
-
 .results-container {
-  border: 1px solid #ddd;
+  position: absolute;
+  top: 48%;
+  z-index: 100;
+  background-color: white;
+  width: 19%;
   max-height: 200px;
   overflow-y: auto;
-}
-
-.results-container div {
-  padding: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 }
 
-.results-container div:hover {
-  background-color: #f0f0f0;
-}
 
 .delete-modal {
   position: fixed;

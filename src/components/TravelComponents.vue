@@ -568,13 +568,13 @@ export default {
 .road-map {
   width: 100%;
   height: 350px;
-  z-index: 1;
+  z-index: 0;
 }
 
 #map {
   width: 100%;
   height: 350px;
-  z-index: 1;
+  z-index: 0;
 }
 
 

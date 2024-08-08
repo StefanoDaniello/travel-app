@@ -22,7 +22,7 @@
                             class="modal-img-top">
                     </div>
                     <div class="d-flex justify-content-between">
-                        <div>
+                        <div class="details">
                             <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
                             <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
                             <p><strong>Meal:</strong></p>
@@ -32,14 +32,15 @@
                                 v-model="selectedTravel.curiosity">{{ selectedTravel.curiosity }}</textarea>
                             <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
                         </div>
-                        <div>
+                        <div class="map-container">
                             <p><strong>Luogo:</strong> {{ selectedTravel.luogo }}</p>
+                            <div id="map" class="map"></div>
                         </div>
                     </div>
 
                     <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
                         <div class="road-info">
-                            <h3>Road {{ index + 1 }} </h3>
+                            <h3>Road {{ index + 1 }}</h3>
                             <p><strong>Road Name:</strong> {{ road.name }}</p>
                             <p><strong>Road Description:</strong> {{ road.description }}</p>
                             <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
@@ -55,14 +56,15 @@
                             <p><strong>Road Note:</strong></p>
                             <textarea id="road_note" v-model="road.note">{{ road.note }}</textarea>
                         </div>
-                        <div class="road-image">
+                        <div class="road-image pb-4">
                             <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy"
-                                class="card-img-top">
+                                class="card-img-top mb-3">
+                            <div :id="`road_map_${index}`" class="map "></div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex">
                         <button type="submit" class="btn btn-success text-white">Salva Modifiche</button>
-                        <button type="button" class="btn btn-danger" @click="DeteleModal">Elimina</button>
+                        <button type="button" class="btn btn-danger mx-3" @click="DeteleModal">Elimina</button>
                     </div>
                 </form>
                 <div v-if="io == 1">
@@ -72,7 +74,8 @@
                             <form @submit.prevent="submitDelete">
                                 <h2>Conferma Eliminazione</h2>
                                 <p>Sei sicuro di voler eliminare {{ selectedTravel.name }}?</p>
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex  justify-content-between">
+                                    <button type="button" class="btn btn-secondary" @click="closeDeteleModal">Annulla</button>
                                     <button type="submit" class="btn btn-danger">Elimina</button>
                                 </div>
                             </form>
@@ -83,9 +86,10 @@
         </div>
     </div>
 </template>
-
 <script>
 import { store } from "../store";
+// import L from "leaflet";
+
 export default {
     name: 'CardComponent',
     props: ['travel'],
@@ -95,7 +99,9 @@ export default {
             selectedTravel: null,
             previewImage: '',
             defaultImg: '/images/placeholder.png',
-            io: null
+            io: null,
+            map: null,
+            roadMaps: []
         };
     },
     computed: {
@@ -116,7 +122,11 @@ export default {
         showModal(travel) {
             this.selectedTravel = { ...travel, road: [...travel.road] };
             this.previewImage = this.getImage;
-            // console.log(this.selectedTravel);
+
+            this.$nextTick(() => {
+                this.initializeMap(); // Inizializza la mappa principale
+                this.initializeRoadMaps(); // Inizializza le mappe per ogni road
+            });
         },
         roadImage(img) {
             return img ? `${this.store.api.imgBasePath}${img}` : this.defaultImg;
@@ -126,13 +136,6 @@ export default {
         },
         handleImgError(event) {
             event.target.src = this.defaultImg;
-        },
-        generateStars(rate) {
-            let stars = '';
-            for (let i = 0; i < 5; i++) {
-                stars += i < rate ? '<span class="star filled" style="color: gold ; font-size: 1.5rem ">★</span>' : '<span class="star empty" style="color: transparent ; -webkit-text-stroke: 0.5px gold; font-size: 1.5rem;">☆</span>';
-            }
-            return stars;
         },
         async submitUpdate() {
             try {
@@ -176,21 +179,46 @@ export default {
                 this.response = 'Error deleting travel!';
                 console.error(error);
             }
+        },
+        initializeMap() {
+            if (this.selectedTravel.latitudine && this.selectedTravel.longitudine) {
+                this.map = L.map("map").setView([this.selectedTravel.latitudine, this.selectedTravel.longitudine], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(this.map);
+
+                L.marker([this.selectedTravel.latitudine, this.selectedTravel.longitudine]).addTo(this.map);
+            }
+        },
+        initializeRoadMaps() {
+            this.selectedTravel.road.forEach((road, index) => {
+                if (road.latitudine && road.longitudine) {
+                    const mapId = `road_map_${index}`;
+                    const roadMap = L.map(mapId).setView([road.latitudine, road.longitudine], 15);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(roadMap);
+
+                    L.marker([road.latitudine, road.longitudine]).addTo(roadMap);
+                    this.roadMaps.push(roadMap);
+                }
+            });
         }
     }
 }
 </script>
 
+
 <style lang="scss" scoped>
 .star {
-    font-size: 24px; // Increased star size
-    color: #d3d3d3; // Light grey for empty stars
+    font-size: 24px;
+    color: #d3d3d3;
     cursor: pointer;
     margin-right: 5px;
 }
 
 .star.filled {
-    color: gold; // Gold color for filled stars
+    color: gold;
 }
 
 .star-rating {
@@ -212,7 +240,6 @@ export default {
     max-height: 100%;
 }
 
-/* Add your modal styles here */
 .modal {
     display: flex;
     justify-content: center;
@@ -245,34 +272,37 @@ export default {
     overflow-y: auto;
 }
 
-/* Custom scrollbar styles */
 .modal-content::-webkit-scrollbar {
     width: 12px;
 }
 
 .modal-content::-webkit-scrollbar-track {
     background-color: #f5f5f5;
-    /* Remove background of the scrollbar track */
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
     background-color: #ccc;
-    /* Customize the color of the scrollbar thumb */
     border-radius: 10px;
     border: 3px solid transparent;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
     background-color: #aaa;
-    /* Color when hovered */
 }
 
 .close {
     float: right;
     font-size: 1.5rem;
     cursor: pointer;
+    color: #333;
+}
+
+.modal-title {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
 }
 
 .modal-img-top {
@@ -280,6 +310,7 @@ export default {
     max-height: 300px;
     object-fit: cover;
     border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card {
@@ -316,24 +347,48 @@ export default {
         height: 155px;
         object-fit: cover;
         transition: transform 0.3s ease-in-out;
+        border-radius: 10px;
 
         &:hover {
             transform: scale(1.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
     }
 
     .card-body {
-        padding: 4px;
+        padding: 10px;
 
         p {
             margin: 0;
-
             &.address {
-                font-size: 0.8rem;
-                margin-top: -4px;
+                font-size: 0.9rem;
+                margin-top: 5px;
             }
         }
     }
+}
+
+.details-container {
+    margin-bottom: 20px;
+}
+
+.details {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.map-container {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
+}
+
+.map {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .road-item {
@@ -357,6 +412,23 @@ export default {
             object-fit: cover;
             border-radius: 10px;
         }
+    }
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
     }
 }
 </style>

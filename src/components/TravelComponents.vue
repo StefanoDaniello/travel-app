@@ -37,27 +37,27 @@
               <div v-else class="image-preview mt-3">
                 <img :src="store.api.defaultImg" alt="Default image preview" />
               </div>
-
             </div>
-            <span v-if="errors.image" class="error-message">{{ errors.image }}</span>
+            <span v-if="errors.image" class="error-message">{{
+              errors.image
+            }}</span>
           </div>
 
-          <div class="col-6	">
+          <div class="col-6">
             <!-- <input type="text" id="luogo" class="form-control"> -->
             <div class="address d-flex justify-content-center flex-column">
-              <span for="luogo"><strong>Luogo:</strong></span> 
+              <span for="luogo"><strong>Luogo:</strong></span>
               <div class="d-flex align-content-center">
-                <input class="h-25 mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"  @input="handleInput"  required maxlength="255"
-                  minlength="7">
+                <input class="h-25 mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
+                  @input="handleInput" required maxlength="255" minlength="7" />
               </div>
               <!-- <div id="adreesResult"></div> -->
               <div id="resultsContainer" class="results-container"></div>
             </div>
-            <div id="map" style="width: 100%; height: 350px; z-index: 1;"></div>
+            <div id="map"></div>
           </div>
         </div>
       </div>
-
 
       <div class="form-group mt-3">
         <label for="description">Description:</label>
@@ -74,8 +74,6 @@
         <textarea id="curiosity" v-model="form.curiosity" class="form-control"></textarea>
       </div>
 
-
-
       <!-- Roads Section -->
       <div v-for="(road, index) in form.roads" :key="index" class="road-group">
         <div class="d-flex align-items-center mb-3">
@@ -87,7 +85,7 @@
 
         <div class="form-group">
           <label :for="'road_name_' + index">Road Name:</label>
-          <input type="text" :id="'road_name_' + index" v-model="road.name" class="form-control" required/>
+          <input type="text" :id="'road_name_' + index" v-model="road.name" class="form-control" required />
           <span v-if="errors[`road_${index}_name`]" class="error-message">{{
             errors[`road_${index}_name`]
           }}</span>
@@ -96,22 +94,21 @@
         <div class="form-group-horizontal">
           <div class="form-group">
             <label :for="'road_start_date_' + index">Road Start Date:</label>
-            <input type="date" :id="'road_start_date_' + index" v-model="road.start_date"  class="form-control" required/>
+            <input type="date" :id="'road_start_date_' + index" v-model="road.start_date" class="form-control"
+              required />
             <span v-if="errors[`road_${index}_start_date`]" class="error-message">{{ errors[`road_${index}_start_date`]
               }}</span>
           </div>
           <div class="form-group">
             <label :for="'road_end_date_' + index">Road End Date:</label>
-            <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" class="form-control" required/>
+            <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" class="form-control" required />
             <span v-if="errors[`road_${index}_end_date`]" class="error-message">{{ errors[`road_${index}_end_date`]
               }}</span>
           </div>
         </div>
 
-
         <div class="container">
           <div class="row">
-
             <div class="col-6">
               <label :for="'road_image_' + index">Road Image:</label>
               <div>
@@ -128,14 +125,17 @@
                   </div>
                 </div>
               </div>
-              <span v-if="errors[`road_${index}_image`]" class="error-message">{{
-                errors[`road_${index}_image`]
-              }}</span>
+              <span v-if="errors[`road_${index}_image`]" class="error-message">{{ errors[`road_${index}_image`]
+                }}</span>
             </div>
 
             <div class="col-6">
               <label for="via">via:</label>
-              <input type="text" :id="'road_via_' + index" v-model="road.via" class="form-control">
+              <input type="text" :id="'road_via_' + index" v-model="road.via" @input="handleRoadInput(index)"
+                class="form-control mb-3" />
+              <div :id="'road_resultsContainer_' + index" class="results-container"></div>
+              <div :id="'road_map_' + index" class="road-map"></div>
+              <!-- Contenitore per la mappa -->
             </div>
           </div>
         </div>
@@ -188,16 +188,16 @@
   </div>
 </template>
 
-
-
 <script>
 import { store } from "../store";
 export default {
   name: "TravelComponent",
   data() {
     return {
+      maps: [],
+      markers: [],
       map: null,
-      marker:null,
+      marker: null,
       results: [],
       store,
       form: {
@@ -236,13 +236,18 @@ export default {
   },
   mounted() {
     this.initializeMap();
+    this.form.roads.forEach((_, index) => {
+      this.initializeRoadMap(index); // Inizializza la mappa per ogni road esistente
+    });
   },
- 
+
   methods: {
+    
     initializeMap() {
-      this.map = L.map('map').setView([0, 0], 2); // Inizializza la mappa centrata su [0, 0]
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      this.map = L.map("map").setView([0, 0], 2); // Inizializza la mappa centrata su [0, 0]
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(this.map);
     },
     updateMap(lat, lon) {
@@ -254,15 +259,17 @@ export default {
       this.map.setView([lat, lon], 15); // Centra la mappa sulle nuove coordinate
     },
     async fetchAddresses(query) {
-      const apiBaseUrl = 'https://api.tomtom.com/search/2/search/';
-      const apiKey = 'z3nuCqYtSq2WG00yWsSJx06bIabR9bRc'; // La tua API key
+      const apiBaseUrl = "https://api.tomtom.com/search/2/search/";
+      const apiKey = "z3nuCqYtSq2WG00yWsSJx06bIabR9bRc"; // La tua API key
       try {
-        const response = await fetch(`${apiBaseUrl}${query}.json?key=${apiKey}`);
-        if (!response.ok) throw new Error('Network response was not ok');
+        const response = await fetch(
+          `${apiBaseUrl}${query}.json?key=${apiKey}`
+        );
+        if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
         return data.results;
       } catch (error) {
-        console.error('Error fetching the address:', error);
+        console.error("Error fetching the address:", error);
         return [];
       }
     },
@@ -274,19 +281,21 @@ export default {
       this.displayResults();
     },
     displayResults() {
-      const resultsContainer = document.getElementById('resultsContainer');
-      resultsContainer.innerHTML = '';
+      const resultsContainer = document.getElementById("resultsContainer");
+      resultsContainer.innerHTML = "";
 
-      this.results.forEach(({ address: { freeformAddress }, position: { lat, lon } }) => {
-        const option = document.createElement('div');
-        option.textContent = freeformAddress;
-        option.addEventListener('click', () => {
-          this.form.luogo = freeformAddress; // Aggiorna il v-model
-          this.updateMap(lat, lon); // Aggiorna la mappa con le coordinate selezionate
-          resultsContainer.innerHTML = ''; // Nascondi i risultati dopo la selezione
-        });
-        resultsContainer.appendChild(option);
-      });
+      this.results.forEach(
+        ({ address: { freeformAddress }, position: { lat, lon } }) => {
+          const option = document.createElement("div");
+          option.textContent = freeformAddress;
+          option.addEventListener("click", () => {
+            this.form.luogo = freeformAddress; // Aggiorna il v-model
+            this.updateMap(lat, lon); // Aggiorna la mappa con le coordinate selezionate
+            resultsContainer.innerHTML = ""; // Nascondi i risultati dopo la selezione
+          });
+          resultsContainer.appendChild(option);
+        }
+      );
     },
     // Altre funzioni esistenti...
     normalizeDate(dateString) {
@@ -312,6 +321,49 @@ export default {
     setDefaultRoadImg(event) {
       event.target.src = this.store.api.defaultImg;
     },
+
+
+   initializeRoadMap(index) {
+      // Inizializza la mappa per una road specifica
+      const mapId = `road_map_${index}`;
+      const map = L.map(mapId).setView([0, 0], 2); 
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      this.maps[index] = map;
+    },
+    updateRoadMap(lat, lon, index) {
+      // Aggiorna la posizione del marker e centra la mappa per una road specifica
+      if (this.markers[index]) {
+        this.markers[index].setLatLng([lat, lon]);
+      } else {
+        this.markers[index] = L.marker([lat, lon]).addTo(this.maps[index]);
+      }
+      this.maps[index].setView([lat, lon], 15);
+    },
+    async handleRoadInput(index) {
+      // Gestisci l'input per il campo via e aggiorna i risultati e la mappa
+      const query = this.form.roads[index].via;
+      if (query.length < 5) return;
+
+      this.results = await this.fetchAddresses(query);
+      this.displayRoadResults(index);
+    },
+    displayRoadResults(index) {
+      const resultsContainer = document.getElementById(`road_resultsContainer_${index}`);
+      resultsContainer.innerHTML = '';
+
+      this.results.forEach(({ address: { freeformAddress }, position: { lat, lon } }) => {
+        const option = document.createElement('div');
+        option.textContent = freeformAddress;
+        option.addEventListener('click', () => {
+          this.form.roads[index].via = freeformAddress; // Aggiorna il v-model
+          this.updateRoadMap(lat, lon, index); // Aggiorna la mappa con le coordinate selezionate
+          resultsContainer.innerHTML = ''; // Nascondi i risultati dopo la selezione
+        });
+        resultsContainer.appendChild(option);
+      });
+    },
     addRoad() {
       this.form.roads.push({
         name: "",
@@ -326,7 +378,10 @@ export default {
         previewImage: "",
         imageFile: null,
       });
-      console.log(this.form.luogo);
+      this.$nextTick(() => {
+        const newIndex = this.form.roads.length - 1;
+        this.initializeRoadMap(newIndex); // Inizializza la mappa per la nuova road
+      });
     },
     setRoadRating(index, rating) {
       this.form.roads[index].rate = rating;
@@ -420,7 +475,8 @@ export default {
             "Road End Date cannot be after the Travel End Date.";
         }
         if (road.imageFile > 2048 * 1024) {
-          roadErrors[`road_${index}_imageFile`] = "File size cannot exceed 2MB.";
+          roadErrors[`road_${index}_imageFile`] =
+            "File size cannot exceed 2MB.";
         }
         // if (road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
         //   roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
@@ -486,11 +542,12 @@ export default {
         const data = await res.json();
         if (res.ok) {
           this.response = "Travel added successfully!";
-          this.$router.push('/')
+          this.$router
+            .push("/")
             .then(() => {
               window.location.reload(); // Forza il refresh della pagina
             })
-            .catch(err => console.error("Error while redirecting:", err));
+            .catch((err) => console.error("Error while redirecting:", err));
         } else {
           this.response = "Error adding travel!";
         }
@@ -505,22 +562,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.road-map {
+  width: 100%;
+  height: 350px;
+  z-index: 1;
+}
+
 #map {
   width: 100%;
-  height: 400px;
+  height: 350px;
+  z-index: 1;
 }
+
+
 .results-container {
   position: absolute;
-  top: 48%;
   z-index: 100;
   background-color: white;
-  width: 19%;
+  width: 360px;
   max-height: 200px;
   overflow-y: auto;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 }
-
 
 .delete-modal {
   position: fixed;

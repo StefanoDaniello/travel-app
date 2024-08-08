@@ -4,21 +4,21 @@
       <!-- Travel Form Fields -->
       <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" id="name" v-model="form.name" class="form-control" required />
+        <input type="text" id="name" v-model="form.name" class="form-control" />
         <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
       </div>
 
       <div class="form-group-horizontal">
         <div class="form-group">
           <label for="start_date">Start Date:</label>
-          <input type="date" id="start_date" v-model="form.start_date" class="form-control" required />
+          <input type="date" id="start_date" v-model="form.start_date" class="form-control" />
           <span v-if="errors.start_date" class="error-message">{{
             errors.start_date
           }}</span>
         </div>
         <div class="form-group">
           <label for="end_date">End Date:</label>
-          <input type="date" id="end_date" v-model="form.end_date" class="form-control" required />
+          <input type="date" id="end_date" v-model="form.end_date" class="form-control" />
           <span v-if="errors.end_date" class="error-message">{{
             errors.end_date
           }}</span>
@@ -45,15 +45,17 @@
 
           <div class="col-6">
             <!-- <input type="text" id="luogo" class="form-control"> -->
-            
-              <span for="luogo"><strong>Luogo:</strong></span>
-                <input class="mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
-                  @input="handleInput" required maxlength="255" minlength="7" />
-             
-              <!-- <div id="adreesResult"></div> -->
-              <div id="resultsContainer" class="results-container"></div>
-              <div id="map"></div>
-            
+
+            <label for="luogo">Luogo:</label>
+            <input class="mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
+              @input="handleInput" maxlength="255" minlength="7" />
+            <!-- <div id="adreesResult"></div> -->
+            <div id="resultsContainer" class="results-container"></div>
+            <div id="map"></div>
+            <span v-if="errors.luogo" class="error-message">{{
+              errors.luogo
+            }}</span>
+
           </div>
         </div>
       </div>
@@ -84,7 +86,7 @@
 
         <div class="form-group">
           <label :for="'road_name_' + index">Road Name:</label>
-          <input type="text" :id="'road_name_' + index" v-model="road.name" class="form-control" required />
+          <input type="text" :id="'road_name_' + index" v-model="road.name" class="form-control" />
           <span v-if="errors[`road_${index}_name`]" class="error-message">{{
             errors[`road_${index}_name`]
           }}</span>
@@ -93,14 +95,13 @@
         <div class="form-group-horizontal">
           <div class="form-group">
             <label :for="'road_start_date_' + index">Road Start Date:</label>
-            <input type="date" :id="'road_start_date_' + index" v-model="road.start_date" class="form-control"
-              required />
+            <input type="date" :id="'road_start_date_' + index" v-model="road.start_date" class="form-control" />
             <span v-if="errors[`road_${index}_start_date`]" class="error-message">{{ errors[`road_${index}_start_date`]
               }}</span>
           </div>
           <div class="form-group">
             <label :for="'road_end_date_' + index">Road End Date:</label>
-            <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" class="form-control" required />
+            <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" class="form-control" />
             <span v-if="errors[`road_${index}_end_date`]" class="error-message">{{ errors[`road_${index}_end_date`]
               }}</span>
           </div>
@@ -132,10 +133,14 @@
               <label for="via">via:</label>
               <input type="text" :id="'road_via_' + index" v-model="road.via" @input="handleRoadInput(index)"
                 class="form-control mb-3" />
+               
               <div :id="'road_resultsContainer_' + index" class="results-container"></div>
               <div :id="'road_map_' + index" class="road-map"></div>
+              <span v-if="errors[`road_${index}_via`]" class="error-message">{{ errors[`road_${index}_via`]
+              }}</span>
               <!-- Contenitore per la mappa -->
             </div>
+           
           </div>
         </div>
 
@@ -144,13 +149,13 @@
           <textarea :id="'road_description_' + index" v-model="road.description" class="form-control"></textarea>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label :for="'road_rate_' + index">Road Rate:</label>
           <div class="star-rating">
             <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
               @click="setRoadRating(index, star)">&#9733;</span>
           </div>
-        </div>
+        </div> -->
 
         <div class="form-group">
           <label :for="'road_note_' + index">Road Note:</label>
@@ -241,7 +246,7 @@ export default {
   },
 
   methods: {
-    
+
     initializeMap() {
       this.map = L.map("map").setView([0, 0], 2); // Inizializza la mappa centrata su [0, 0]
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -324,10 +329,10 @@ export default {
     },
 
 
-   initializeRoadMap(index) {
+    initializeRoadMap(index) {
       // Inizializza la mappa per una road specifica
       const mapId = `road_map_${index}`;
-      const map = L.map(mapId).setView([0, 0], 2); 
+      const map = L.map(mapId).setView([0, 0], 2);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
@@ -438,6 +443,10 @@ export default {
         this.errors.image = "Image must be less than 2MB.";
         isValid = false;
       }
+      if(!this.form.luogo){
+        this.errors.luogo = "Luogo is required.";
+        isValid = false;
+      }
 
       // Validate Roads
       const roadErrors = this.validateRoads(travelStartDate, travelEndDate);
@@ -484,6 +493,9 @@ export default {
         // if (road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
         //   roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
         // }
+        if(!road.via){
+          roadErrors[`road_${index}_via`] = "Via is required.";
+        }
       });
 
       return roadErrors;

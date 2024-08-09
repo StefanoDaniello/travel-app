@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <HeaderComponents />
+    <HeaderComponents/>
     <!-- <div class="d-flex justify-content-between align-items-center"  v-if="!isTravelRoute">
       <h1>Travel App</h1>
       <router-link to="/travel" class="btn btn-success"><i class="fa fa-plus"></i></router-link>
@@ -28,11 +28,7 @@ export default {
       store
     }
   },
-  computed: {
-    isTravelRoute() {
-      return this.$route.path === '/travel';
-    }
-  },
+ 
   methods: {
     getTravels() {
       axios
@@ -54,4 +50,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

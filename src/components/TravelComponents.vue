@@ -418,21 +418,21 @@ export default {
 
       // Validate Travel
       if (!this.form.name) {
-        this.errors.name = "Name is required.";
+        this.errors.name = "Il nome è obbligatorio.";
         isValid = false;
       }
       if (!this.form.start_date) {
-        this.errors.start_date = "Start Date is required.";
+        this.errors.start_date = "La data di partenza è obbligatoria.";
         isValid = false;
       } else if (travelStartDate < this.normalizeDate(new Date())) {
-        this.errors.start_date = "Start Date cannot be in the past.";
+        this.errors.start_date = "La data di partenza non può essere nel passato.";
         isValid = false;
       }
       if (!this.form.end_date) {
         this.errors.end_date = "End Date is required.";
         isValid = false;
       } else if (travelStartDate && travelEndDate < travelStartDate) {
-        this.errors.end_date = "End Date must be after Start Date.";
+        this.errors.end_date = "La data di arrivo deve essere dopo la data di partenza.";
         isValid = false;
       }
       // if (this.form.imageFile != ".png" && this.form.imageFile != ".jpg" && this.form.imageFile != ".jpeg" && this.form.imageFile != ".gif") {
@@ -440,11 +440,11 @@ export default {
       //   isValid = false;
       // }
       if (this.form.imageFile > 2048 * 1024) {
-        this.errors.image = "Image must be less than 2MB.";
+        this.errors.image = "L'immagine deve essere inferiore a 2MB.";
         isValid = false;
       }
       if(!this.form.luogo){
-        this.errors.luogo = "Luogo is required.";
+        this.errors.luogo = "Il luogo del viaggio è obbligatorio.";
         isValid = false;
       }
 
@@ -465,36 +465,36 @@ export default {
         const roadEndDate = this.normalizeDate(road.end_date);
 
         if (!road.name) {
-          roadErrors[`road_${index}_name`] = "Road Name is required.";
+          roadErrors[`road_${index}_name`] = "Il nome è obbligatorio.";
         }
         if (!road.start_date) {
           roadErrors[`road_${index}_start_date`] =
-            "Road Start Date is required.";
+            "La data di partenza è obbligatoria.";
         } else if (roadStartDate < travelStartDate) {
           roadErrors[`road_${index}_start_date`] =
-            "Road Start Date cannot be before the Travel Start Date.";
+            "La data di partenza deve essere dopo la data di partenza del viaggio.";
         } else if (roadStartDate > travelEndDate) {
           roadErrors[`road_${index}_start_date`] =
-            "Road Start Date cannot be after the Travel End Date.";
+            "La data di partenza deve essere prima della data di fine del viaggio.";
         }
         if (!road.end_date) {
-          roadErrors[`road_${index}_end_date`] = "Road End Date is required.";
+          roadErrors[`road_${index}_end_date`] = "La data di fine è obbligatoria.";
         } else if (roadEndDate < roadStartDate) {
           roadErrors[`road_${index}_end_date`] =
-            "Road End Date must be after Road Start Date.";
+            "La data di fine deve essere dopo la data di partenza.";
         } else if (roadEndDate > travelEndDate) {
           roadErrors[`road_${index}_end_date`] =
-            "Road End Date cannot be after the Travel End Date.";
+            "La data di fine deve essere prima della data di fine del viaggio.";
         }
         if (road.imageFile > 2048 * 1024) {
           roadErrors[`road_${index}_imageFile`] =
-            "File size cannot exceed 2MB.";
+            "L'immagine deve essere inferiore a 2MB.";
         }
         // if (road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
         //   roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
         // }
         if(!road.via){
-          roadErrors[`road_${index}_via`] = "Via is required.";
+          roadErrors[`road_${index}_via`] = "Il luogo della rotta è obbligatorio.";
         }
       });
 

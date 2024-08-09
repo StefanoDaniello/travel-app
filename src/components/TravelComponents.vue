@@ -1,23 +1,28 @@
 <template>
   <div class="form-container">
     <form @submit.prevent="submitForm" class="travel-form">
+      <div class="mb-4">
+        <h2>Crea Nuovo Viaggio</h2>
+        <small>I campi con <strong class="text-danger">*</strong> sono obbligatori</small>
+      </div>
+        
       <!-- Travel Form Fields -->
       <div class="form-group">
-        <label for="name">Name:</label>
+        <label for="name">Nome Viaggio<strong class="text-danger">*</strong>:</label>
         <input type="text" id="name" v-model="form.name" class="form-control" />
         <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
       </div>
 
       <div class="form-group-horizontal">
         <div class="form-group">
-          <label for="start_date">Start Date:</label>
+          <label for="start_date">Data di Inizio<strong class="text-danger">*</strong>:</label>
           <input type="date" id="start_date" v-model="form.start_date" class="form-control" />
           <span v-if="errors.start_date" class="error-message">{{
             errors.start_date
           }}</span>
         </div>
         <div class="form-group">
-          <label for="end_date">End Date:</label>
+          <label for="end_date">Data di Fine <strong class="text-danger">*</strong>: </label>
           <input type="date" id="end_date" v-model="form.end_date" class="form-control" />
           <span v-if="errors.end_date" class="error-message">{{
             errors.end_date
@@ -27,10 +32,10 @@
       <div class="container">
         <div class="row">
           <div class="col-6">
-            <label for="image">Image:</label>
+            <label for="image">Immagine viaggio:</label>
             <div>
               <input type="file" id="image" @change="handleFileUpload" class="d-none" />
-              <label for="image" class="btn btn-primary ms-2">Choose Image</label>
+              <label for="image" class="btn btn-primary ms-2">Scegli Immagine</label>
               <div class="image-preview mt-3" v-if="previewImage">
                 <img :src="previewImage || store.api.defaultImg" @error="setDefaultImg" alt="Image preview" />
               </div>
@@ -46,10 +51,9 @@
           <div class="col-6">
             <!-- <input type="text" id="luogo" class="form-control"> -->
 
-            <label for="luogo">Luogo:</label>
+            <label for="luogo">Luogo<strong class="text-danger">*</strong>:</label>
             <input class="mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
               @input="handleInput" maxlength="255" minlength="7" />
-            <!-- <div id="adreesResult"></div> -->
             <div id="resultsContainer" class="results-container"></div>
             <div id="map"></div>
             <span v-if="errors.luogo" class="error-message">{{
@@ -61,31 +65,56 @@
       </div>
 
       <div class="form-group mt-3">
-        <label for="description">Description:</label>
+        <label for="description">Descrizione:</label>
         <textarea id="description" v-model="form.description" class="form-control"></textarea>
       </div>
 
       <div class="form-group">
-        <label for="meal">Meal:</label>
+        <label for="meal">Piatti:</label>
         <textarea id="meal" v-model="form.meal" class="form-control"></textarea>
       </div>
 
       <div class="form-group">
-        <label for="curiosity">Curiosity:</label>
+        <label for="curiosity">Curiosità:</label>
         <textarea id="curiosity" v-model="form.curiosity" class="form-control"></textarea>
       </div>
 
       <!-- Roads Section -->
       <div v-for="(road, index) in form.roads" :key="index" class="road-group">
         <div class="d-flex align-items-center mb-3">
-          <button v-if="index + 1 > 1" type="button" class="btn btn-danger" @click="openDeleteModal(index)">
-            x
+          <button class="button" v-if="index + 1 > 1" type="button" @click="openDeleteModal(index)" title="Elimina">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="svgIcon bin-top">
+              <g clip-path="url(#clip0_35_24)">
+                <path fill="black"
+                  d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z">
+                </path>
+              </g>
+              <defs>
+                <clipPath id="clip0_35_24">
+                  <rect fill="white" height="14" width="69"></rect>
+                </clipPath>
+              </defs>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 57" class="svgIcon bin-bottom">
+              <g clip-path="url(#clip0_35_22)">
+                <path fill="black"
+                  d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z">
+                </path>
+              </g>
+              <defs>
+                <clipPath id="clip0_35_22">
+                  <rect fill="white" height="57" width="69"></rect>
+                </clipPath>
+              </defs>
+            </svg>
           </button>
-          <h3 class="mx-2">Road {{ index + 1 }}</h3>
+
+          <h3 class="mx-2 mt-2">Rotta {{ index + 1 }}</h3>
         </div>
 
         <div class="form-group">
-          <label :for="'road_name_' + index">Road Name:</label>
+          <label :for="'road_name_' + index">Nome<strong class="text-danger">*</strong>:</label>
           <input type="text" :id="'road_name_' + index" v-model="road.name" class="form-control" />
           <span v-if="errors[`road_${index}_name`]" class="error-message">{{
             errors[`road_${index}_name`]
@@ -94,13 +123,13 @@
 
         <div class="form-group-horizontal">
           <div class="form-group">
-            <label :for="'road_start_date_' + index">Road Start Date:</label>
+            <label :for="'road_start_date_' + index">Data di Inizio<strong class="text-danger">*</strong>:</label>
             <input type="date" :id="'road_start_date_' + index" v-model="road.start_date" class="form-control" />
             <span v-if="errors[`road_${index}_start_date`]" class="error-message">{{ errors[`road_${index}_start_date`]
               }}</span>
           </div>
           <div class="form-group">
-            <label :for="'road_end_date_' + index">Road End Date:</label>
+            <label :for="'road_end_date_' + index">Data di Fine<strong class="text-danger">*</strong>:</label>
             <input type="date" :id="'road_end_date_' + index" v-model="road.end_date" class="form-control" />
             <span v-if="errors[`road_${index}_end_date`]" class="error-message">{{ errors[`road_${index}_end_date`]
               }}</span>
@@ -110,12 +139,12 @@
         <div class="container">
           <div class="row">
             <div class="col-6">
-              <label :for="'road_image_' + index">Road Image:</label>
+              <label :for="'road_image_' + index">Immagine Rotta:</label>
               <div>
                 <input type="file" :id="'road_image_' + index" @change="(event) => handleRoadFileUpload(event, index)"
                   class="d-none" />
                 <div>
-                  <label :for="'road_image_' + index" class="btn btn-primary ms-2">Choose Image</label>
+                  <label :for="'road_image_' + index" class="btn btn-primary ms-2">Scegli Immagine</label>
                   <div class="image-preview" v-if="road.previewImage">
                     <img :src="road.previewImage || store.api.defaultImg" @error="setDefaultRoadImg"
                       alt="Road image preview" />
@@ -130,35 +159,25 @@
             </div>
 
             <div class="col-6">
-              <label for="via">via:</label>
+              <label for="via">Luogo<strong class="text-danger">*</strong>:</label>
               <input type="text" :id="'road_via_' + index" v-model="road.via" @input="handleRoadInput(index)"
-                class="form-control mb-3" />
-               
+                class="form-control mb-2" />
               <div :id="'road_resultsContainer_' + index" class="results-container"></div>
               <div :id="'road_map_' + index" class="road-map"></div>
               <span v-if="errors[`road_${index}_via`]" class="error-message">{{ errors[`road_${index}_via`]
-              }}</span>
+                }}</span>
               <!-- Contenitore per la mappa -->
             </div>
-           
+
           </div>
         </div>
 
         <div class="form-group mt-3">
-          <label :for="'road_description_' + index">Road Description:</label>
+          <label :for="'road_description_' + index">Descrizione:</label>
           <textarea :id="'road_description_' + index" v-model="road.description" class="form-control"></textarea>
         </div>
-
-        <!-- <div class="form-group">
-          <label :for="'road_rate_' + index">Road Rate:</label>
-          <div class="star-rating">
-            <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
-              @click="setRoadRating(index, star)">&#9733;</span>
-          </div>
-        </div> -->
-
         <div class="form-group">
-          <label :for="'road_note_' + index">Road Note:</label>
+          <label :for="'road_note_' + index">Note:</label>
           <textarea :id="'road_note_' + index" v-model="road.note" class="form-control"></textarea>
         </div>
       </div>
@@ -168,13 +187,16 @@
         <button type="button" class="btn btn-primary" @click="addRoad">
           Add Road
         </button>
-        <button type="submit" class="btn btn-success">Add Travel</button>
+        <div>
+          <button type="submit" class="btn btn-success">Add Travel</button>
+        </div>
+        
       </div>
     </form>
 
     <div v-if="showDeleteModal" class="delete-modal">
       <div class="modal-content">
-        <p>Vuoi davvero cancellare questa rotta?</p>
+        <h5 class="my-3">Vuoi davvero cancellare questa rotta?</h5>
         <div class="d-flex justify-content-center">
           <button class="btn btn-danger mx-1" @click="deleteRoad">
             Elimina
@@ -429,7 +451,7 @@ export default {
         isValid = false;
       }
       if (!this.form.end_date) {
-        this.errors.end_date = "End Date is required.";
+        this.errors.end_date = "La data di fine è obbligatoria.";
         isValid = false;
       } else if (travelStartDate && travelEndDate < travelStartDate) {
         this.errors.end_date = "La data di arrivo deve essere dopo la data di partenza.";
@@ -443,7 +465,7 @@ export default {
         this.errors.image = "L'immagine deve essere inferiore a 2MB.";
         isValid = false;
       }
-      if(!this.form.luogo){
+      if (!this.form.luogo) {
         this.errors.luogo = "Il luogo del viaggio è obbligatorio.";
         isValid = false;
       }
@@ -493,7 +515,7 @@ export default {
         // if (road.imageFile != ".jpeg" && road.imageFile != ".png" && road.imageFile != ".jpg" && road.imageFile != ".webp") {
         //   roadErrors[`road_${index}_imageFile`] = "File type must be .jpeg, .png, .jpg, or .webp.";
         // }
-        if(!road.via){
+        if (!road.via) {
           roadErrors[`road_${index}_via`] = "Il luogo della rotta è obbligatorio.";
         }
       });
@@ -577,6 +599,52 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// Deleat button
+.button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  gap: 2px;
+}
+
+.svgIcon {
+  width: 12px;
+  transition-duration: 0.3s;
+}
+
+.svgIcon path {
+  fill: white;
+}
+
+.button:hover {
+  transition-duration: 0.3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+  gap: 0;
+}
+
+.bin-top {
+  transform-origin: bottom right;
+}
+.button:hover .bin-top {
+  transition-duration: 0.5s;
+  transform: rotate(160deg);
+}
+
+// Mappe
+
 .road-map {
   width: 100%;
   height: 350px;
@@ -588,7 +656,6 @@ export default {
   height: 350px;
   z-index: 0;
 }
-
 
 .results-container {
   position: absolute;

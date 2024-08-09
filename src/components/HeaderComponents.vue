@@ -40,7 +40,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* Stile per il link attivo */
+.no-router{
+    color: black;
+}
 .router-link {
   position: relative;
   text-decoration: none; /* Rimuove eventuali decorazioni di testo predefinite */
@@ -80,7 +82,8 @@ header {
     right: 0;
     height: 80px;
     z-index: 1000;
-    padding-top: 30px;
+    padding-top: 20px;
+    background-color: #e0e0e0;
 }
 .float-button {
     position: fixed;

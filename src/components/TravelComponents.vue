@@ -217,7 +217,7 @@
 
       <!-- Buttons -->
       <div class="form-group d-flex justify-content-between">
-        <button type="button" class="btn btn-primary" @click="addRoad">
+        <button type="button" class="add-road" @click="addRoad">
           Add Road
         </button>
         <div>
@@ -641,8 +641,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// Road-button 
+.add-road{
+  padding: 17px 40px;
+  border-radius: 50px;
+  cursor: pointer;
+  border: 0;
+  color: white;
+  background-color: #94eb31;
+  box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 15px;
+  transition: all 0.5s ease;
+}
+
+.add-road:hover {
+  letter-spacing: 3px;
+  background-color: rgb(107, 214, 36);
+  color: hsl(0, 0%, 100%);
+  box-shadow: rgb(110, 214, 41) 0px 7px 29px 0px;
+}
+
 // Choose-Button-img
-/* Stili per il pulsante */
 .Choose-img {
   --width: 100%;
   --height: 50px;

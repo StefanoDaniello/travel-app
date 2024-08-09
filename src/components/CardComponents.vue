@@ -5,9 +5,9 @@
                 <img :src="getImage" :alt="travel.name" @error="handleImgError" loading="lazy" class="card-img-top">
             </div>
             <div class="card-body">
-                <p class="card-title fw-bold">{{ travel.name }}</p>
-                <p class="address"><strong>Data di Inizio</strong> {{ travel.start_date }}</p>
-                <p class="address"><strong>Data di Fine</strong> {{ travel.end_date }}</p>
+                <h4 class="card-title fw-bold">{{ travel.name }}</h4>
+                <p class="address"><strong>Data di Inizio:</strong> {{ travel.start_date }}</p>
+                <p class="address"><strong>Data di Fine:</strong> {{ travel.end_date }}</p>
             </div>
         </div>
 
@@ -23,6 +23,8 @@
                     </div>
                     <div class="d-flex justify-content-between flex-wrap my-4">
                         <div class="details">
+                            <h3>Voto del Viaggio: <span v-html="averageRatingStars"></span>
+                            </h3>
                             <div class="d-flex">
                                 <p><strong>Data di Inizio:</strong> {{ selectedTravel.start_date }}</p>
                                 <p class="ms-3"><strong>Data di Fine</strong> {{ selectedTravel.end_date }}</p>
@@ -68,7 +70,7 @@
                                     <small class="text-muted">Clicca per valutare</small>
                                 </div>
                                 <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
-                                    @click="setRoadRating(index, star)">&#9733;</span>
+                                @click="setRoadRating(index, star)">&#9733;</span>
                             </div>
                         </div>
                         <div class="road-image pb-4">
@@ -116,13 +118,30 @@ export default {
             defaultImg: '/images/placeholder.png',
             io: null,
             map: null,
-            roadMaps: []
+            roadMaps: [],
         };
     },
     computed: {
         getImage() {
             return this.travel.image ? `${this.store.api.imgBasePath}${this.travel.image}` : this.defaultImg;
         },
+        averageRating() {
+            if (this.selectedTravel && this.selectedTravel.road.length > 0) {
+                const totalRating = this.selectedTravel.road.reduce((sum, road) => sum + (road.rate || 0), 0);
+                return (totalRating / this.selectedTravel.road.length).toFixed(1); // Fissa a una decimale
+            }
+            return 0; // Ritorna 0 se non ci sono rotte o valutazioni
+        },
+        // Genera il markup delle stelline per il voto medio
+        averageRatingStars() {
+            const rating = parseFloat(this.averageRating);
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                const fillColor = i <= rating ? 'gold' : '#d3d3d3'; 
+                stars += `<span style="color: ${fillColor}; font-size: 1.2em; margin-right: 2px;">&#9733;</span>`;
+            }
+            return stars;
+        }
     },
     methods: {
         closeDeteleModal() {
@@ -225,6 +244,7 @@ export default {
 
 
 <style lang="scss" scoped>
+
 .star {
     font-size: 24px;
     color: #d3d3d3;
@@ -329,6 +349,7 @@ export default {
 }
 
 .card {
+    height: 350px;
     border: 0;
     border-radius: 0;
     background-color: transparent;
@@ -381,7 +402,7 @@ export default {
         p {
             margin: 0;
             &.address {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
                 margin-top: 5px;
             }
         }

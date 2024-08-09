@@ -1,5 +1,5 @@
 <template>
-  <div class="form-container">
+  <div class="form-container mb-5">
     <form @submit.prevent="submitForm" class="travel-form">
       <div class="mb-4">
         <h2>Crea Nuovo Viaggio</h2>
@@ -956,7 +956,7 @@ export default {
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .travel-form {

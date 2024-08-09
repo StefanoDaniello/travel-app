@@ -1,11 +1,7 @@
 <template>
-  <div class="container mt-5">
-    <HeaderComponents/>
-    <!-- <div class="d-flex justify-content-between align-items-center"  v-if="!isTravelRoute">
-      <h1>Travel App</h1>
-      <router-link to="/travel" class="btn btn-success"><i class="fa fa-plus"></i></router-link>
-    </div> -->
-    <div class="container d-flex justify-content-center mt-5">
+  <div class="container">
+    <HeaderComponents />
+    <div class="container d-flex justify-content-center container-view">
       <router-view></router-view>
     </div>
   </div>
@@ -50,5 +46,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.container-view {
+  margin-top: 100px;
+}
 </style>

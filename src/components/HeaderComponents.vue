@@ -1,12 +1,13 @@
 <template>
     <header>
-        <div class="d-flex justify-content-between">
-            <div>
+        <div class="d-flex justify-content-between container align-items-center">
+            <router-link to="/" class="no-router">
                 <h1>Travel App</h1>
-            </div>
+            </router-link>
             <div>
-                <router-link to="/" class="btn btn-primary mx-3 text-white">
-                    Home</router-link>
+                <router-link to="/" class="router-link">
+                    <h6>Home</h6>
+                </router-link>
                 <router-link to="/travel" class="float-button" v-if="!isTravelRoute">
                     <div class="wrapper">
                         <input type="checkbox" />
@@ -17,7 +18,6 @@
                         </div>
                         <svg></svg>
                     </div>
-
                 </router-link>
             </div>
         </div>
@@ -40,6 +40,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* Stile per il link attivo */
+.router-link {
+  position: relative;
+  text-decoration: none; /* Rimuove eventuali decorazioni di testo predefinite */
+}
+
+/* Linea blu sotto il link attivo */
+.router-link-active:not(.no-router)::after {
+  content: "";
+  position: absolute;
+  bottom: -5px; /* Distanza dalla parte inferiore del link */
+  left: 0;
+  width: 100%;
+  height: 3px; /* Altezza della linea blu */
+  background-color: #007bff; /* Colore blu */
+  transition: all 0.3s ease; /* Transizione fluida */
+}
+
+/* Colore del testo normale */
+.router-link h6 {
+  color: black; 
+}
+
+/* Linea blu sparisce quando il link non è attivo */
+.router-link:not(.router-link-active)::after {
+  content: none; 
+}
+
+/* Colore del testo quando il mouse è sopra il link non attivo */
+.router-link:hover h6 {
+  color: #007bff; /* Colore blu per il testo */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    z-index: 1000;
+    padding-top: 30px;
+}
 .float-button {
     position: fixed;
     bottom: 100px;

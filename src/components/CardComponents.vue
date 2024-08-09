@@ -6,8 +6,8 @@
             </div>
             <div class="card-body">
                 <p class="card-title fw-bold">{{ travel.name }}</p>
-                <p class="address"><strong>Data inizio:</strong> {{ travel.start_date }}</p>
-                <p class="address"><strong>Data fine:</strong> {{ travel.end_date }}</p>
+                <p class="address"><strong>Data di Inizio</strong> {{ travel.start_date }}</p>
+                <p class="address"><strong>Data di Fine</strong> {{ travel.end_date }}</p>
             </div>
         </div>
 
@@ -24,11 +24,11 @@
                     <div class="d-flex justify-content-between flex-wrap my-4">
                         <div class="details">
                             <div class="d-flex">
-                                <p><strong>Data inizio:</strong> {{ selectedTravel.start_date }}</p>
-                                <p class="ms-3"><strong>Data fine:</strong> {{ selectedTravel.end_date }}</p>
+                                <p><strong>Data di Inizio:</strong> {{ selectedTravel.start_date }}</p>
+                                <p class="ms-3"><strong>Data di Fine</strong> {{ selectedTravel.end_date }}</p>
                             </div>
                             <div>
-                                <strong>Cibi:</strong>
+                                <strong>Piatti:</strong>
                                 <textarea id="meal" v-model="selectedTravel.meal" class="form-control w-75">{{ selectedTravel.meal }}</textarea>
                             </div>
                             <div class="mt-3">
@@ -51,21 +51,21 @@
                             <h3>Rotta {{ index + 1 }} : {{ road.name }}</h3>
                             <p><strong>Luogo:</strong> {{ road.via }}</p>
                             <div class="d-flex">
-                                <p><strong>Data inizio:</strong> {{ road.start_date }}</p>
-                                <p class="ms-3"><strong>Data fine:</strong> {{ road.end_date }}</p>
+                                <p><strong>Data di Inizio</strong> {{ road.start_date }}</p>
+                                <p class="ms-3"><strong>Data di Fine</strong> {{ road.end_date }}</p>
                             </div>
                             <div>
                                 <strong>Descrizione:</strong>
                                 <textarea id="road_description" v-model="road.description" class="form-control w-75">{{ road.description }}</textarea>
                             </div>
                             <div class="mt-3">
-                                <strong>Road Note:</strong>
+                                <strong>Note:</strong>
                                 <textarea id="road_note" v-model="road.note" class="form-control w-75">{{ road.note }}</textarea>
                             </div>
                             <div class="star-rating mt-3">
                                 <div>
-                                    <div><strong>Road Rate:</strong></div>
-                                    <small class="text-muted">Click to add a rate</small>
+                                    <div><strong>Valutazione Rotta:</strong></div>
+                                    <small class="text-muted">Clicca per valutare</small>
                                 </div>
                                 <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
                                     @click="setRoadRating(index, star)">&#9733;</span>
@@ -332,7 +332,12 @@ export default {
     border: 0;
     border-radius: 0;
     background-color: transparent;
-
+    &:hover {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+        border-radius: 20px;
+        cursor: pointer;
+    }
     .image-container {
         position: relative;
         overflow: hidden;

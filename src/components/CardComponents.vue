@@ -22,7 +22,7 @@
                             class="modal-img-top">
                     </div>
                     <div class="d-flex justify-content-between flex-wrap my-4">
-                        <div class="details" style="width: 40%;">
+                        <div class="details">
                             <div class="d-flex">
                                 <p><strong>Data inizio:</strong> {{ selectedTravel.start_date }}</p>
                                 <p class="ms-3"><strong>Data fine:</strong> {{ selectedTravel.end_date }}</p>
@@ -40,7 +40,7 @@
                                 <textarea id="description" v-model="selectedTravel.description" class="form-control w-75">{{ selectedTravel.description }}</textarea>
                             </div>
                         </div>
-                        <div class="map-container" style="width: 60%;">
+                        <div class="map-container" >
                             <p><strong>Luogo:</strong> {{ selectedTravel.luogo }}</p>
                             <div id="map" class="map"></div>
                         </div>

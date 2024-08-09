@@ -5,7 +5,7 @@
         <h2>Crea Nuovo Viaggio</h2>
         <small>I campi con <strong class="text-danger">*</strong> sono obbligatori</small>
       </div>
-        
+
       <!-- Travel Form Fields -->
       <div class="form-group">
         <label for="name">Nome Viaggio<strong class="text-danger">*</strong>:</label>
@@ -82,7 +82,8 @@
       <!-- Roads Section -->
       <div v-for="(road, index) in form.roads" :key="index" class="road-group">
         <div class="d-flex align-items-center mb-3">
-          <button class="trash-button" v-if="index + 1 > 1" type="button" @click="openDeleteModal(index)" title="Elimina">
+          <button class="trash-button" v-if="index + 1 > 1" type="button" @click="openDeleteModal(index)"
+            title="Elimina">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="trash-svgIcon trash-bin-top">
               <g clip-path="url(#clip0_35_24)">
                 <path fill="black"
@@ -188,9 +189,20 @@
           Add Road
         </button>
         <div>
-          <button type="submit" class="btn btn-success">Add Travel</button>
+          <button class="send-button" type="submit">
+            <div class="send-svg-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path fill="currentColor"
+                  d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                </path>
+              </svg>
+            </div>
+            <span>Crea Viaggio</span>
+          </button>
+
         </div>
-        
+
       </div>
     </form>
 
@@ -599,6 +611,66 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// Send Button 
+.send-button {
+  font-family: inherit;
+  font-size: 18px;
+  background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+  color: white;
+  padding: 0.8em 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.send-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.send-button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.send-button span {
+  display: block;
+  margin-left: 0.4em;
+  transition: all 0.3s;
+}
+
+/* Stili per l'icona SVG */
+.send-svg-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin-right: 0.5em;
+  transition: all 0.3s;
+}
+
+.send-button:hover .send-svg-wrapper {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.send-button svg {
+  width: 18px;
+  height: 18px;
+  fill: white;
+  transition: all 0.3s;
+}
+
+.send-button:hover svg {
+  transform: rotate(45deg);
+}
+
 // Deleat button
 .trash-button {
   width: 50px;
@@ -638,6 +710,7 @@ export default {
 .trash-bin-top {
   transform-origin: bottom right;
 }
+
 .trash-button:hover .trash-bin-top {
   transition-duration: 0.5s;
   transform: rotate(160deg);

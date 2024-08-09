@@ -6,33 +6,41 @@
             </div>
             <div class="card-body">
                 <p class="card-title fw-bold">{{ travel.name }}</p>
-                <p class="address"><strong>Start Date:</strong> {{ travel.start_date }}</p>
-                <p class="address"><strong>End Date:</strong> {{ travel.end_date }}</p>
+                <p class="address"><strong>Data inizio:</strong> {{ travel.start_date }}</p>
+                <p class="address"><strong>Data fine:</strong> {{ travel.end_date }}</p>
             </div>
         </div>
 
         <!-- Modale -->
         <div v-if="selectedTravel" class="modal" @click.self="closeModal">
             <div class="modal-content">
-                <span class="close" @click="closeModal">&times;</span>
+                <span class="close d-flex justify-content-end fs-2" @click="closeModal">&times;</span>
                 <form @submit.prevent="submitUpdate">
                     <h2>{{ selectedTravel.name }}</h2>
                     <div class="image-container">
                         <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy"
                             class="modal-img-top">
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <div class="details">
-                            <p><strong>Start Date:</strong> {{ selectedTravel.start_date }}</p>
-                            <p><strong>End Date:</strong> {{ selectedTravel.end_date }}</p>
-                            <p><strong>Meal:</strong></p>
-                            <textarea id="meal" v-model="selectedTravel.meal">{{ selectedTravel.meal }}</textarea>
-                            <p><strong>Curiosity:</strong></p>
-                            <textarea id="curiosity"
-                                v-model="selectedTravel.curiosity">{{ selectedTravel.curiosity }}</textarea>
-                            <p><strong>Description:</strong> {{ selectedTravel.description }}</p>
+                    <div class="d-flex justify-content-between flex-wrap my-4">
+                        <div class="details" style="width: 40%;">
+                            <div class="d-flex">
+                                <p><strong>Data inizio:</strong> {{ selectedTravel.start_date }}</p>
+                                <p class="ms-3"><strong>Data fine:</strong> {{ selectedTravel.end_date }}</p>
+                            </div>
+                            <div>
+                                <strong>Cibi:</strong>
+                                <textarea id="meal" v-model="selectedTravel.meal" class="form-control w-75">{{ selectedTravel.meal }}</textarea>
+                            </div>
+                            <div class="mt-3">
+                                <strong>Curiosità:</strong>
+                                <textarea id="curiosity" v-model="selectedTravel.curiosity" class="form-control w-75">{{ selectedTravel.curiosity }}</textarea>
+                            </div>
+                            <div class="mt-3">
+                                <strong>Descrizione:</strong>
+                                <textarea id="description" v-model="selectedTravel.description" class="form-control w-75">{{ selectedTravel.description }}</textarea>
+                            </div>
                         </div>
-                        <div class="map-container">
+                        <div class="map-container" style="width: 60%;">
                             <p><strong>Luogo:</strong> {{ selectedTravel.luogo }}</p>
                             <div id="map" class="map"></div>
                         </div>
@@ -40,14 +48,21 @@
 
                     <div v-for="(road, index) in selectedTravel.road" :key="index" class="road-item">
                         <div class="road-info">
-                            <h3>Road {{ index + 1 }}</h3>
-                            <p><strong>Road Name:</strong> {{ road.name }}</p>
-                            <p><strong>Road Description:</strong> {{ road.description }}</p>
-                            <p><strong>Road Start Date:</strong> {{ road.start_date }}</p>
-                            <p><strong>Road End Date:</strong> {{ road.end_date }}</p>
-                            <p><strong>Road Via:</strong> {{ road.via }}</p>
-
-                            <div class="star-rating">
+                            <h3>Rotta {{ index + 1 }} : {{ road.name }}</h3>
+                            <p><strong>Luogo:</strong> {{ road.via }}</p>
+                            <div class="d-flex">
+                                <p><strong>Data inizio:</strong> {{ road.start_date }}</p>
+                                <p class="ms-3"><strong>Data fine:</strong> {{ road.end_date }}</p>
+                            </div>
+                            <div>
+                                <strong>Descrizione:</strong>
+                                <textarea id="road_description" v-model="road.description" class="form-control w-75">{{ road.description }}</textarea>
+                            </div>
+                            <div class="mt-3">
+                                <strong>Road Note:</strong>
+                                <textarea id="road_note" v-model="road.note" class="form-control w-75">{{ road.note }}</textarea>
+                            </div>
+                            <div class="star-rating mt-3">
                                 <div>
                                     <div><strong>Road Rate:</strong></div>
                                     <small class="text-muted">Click to add a rate</small>
@@ -55,9 +70,6 @@
                                 <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
                                     @click="setRoadRating(index, star)">&#9733;</span>
                             </div>
-
-                            <p><strong>Road Note:</strong></p>
-                            <textarea id="road_note" v-model="road.note">{{ road.note }}</textarea>
                         </div>
                         <div class="road-image pb-4">
                             <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy"
@@ -378,6 +390,7 @@ export default {
 .details {
     flex: 1;
     padding-right: 20px;
+    width: 50%;
 }
 
 .map-container {

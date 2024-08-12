@@ -8,5 +8,6 @@ export const store = reactive({
   },
   data: {
     travels: [],
+    loading: false,
   },
 });

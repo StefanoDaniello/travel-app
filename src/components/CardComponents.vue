@@ -99,18 +99,21 @@
                         </div>
                     </div>
                 </div>
+                <div v-if="loading" class="loader-modal">
+                    <LoaderComponent2/>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script>
 import { store } from "../store";
-import LoaderComponent from "./LoaderComponent.vue";
+import LoaderComponent2 from "./LoaderComponent2.vue";
 export default {
     name: 'CardComponent',
     props: ['travel'],
     components: {
-        LoaderComponent
+        LoaderComponent2
     },
     data() {
         return {
@@ -121,6 +124,7 @@ export default {
             io: null,
             map: null,
             roadMaps: [],
+            loading: false
         };
     },
     computed: {
@@ -175,6 +179,7 @@ export default {
         },
         async submitUpdate() {
             try {
+                this.loading = true;
                 const res = await fetch(`${this.store.api.baseUrl}travel/${this.selectedTravel.slug}`, {
                     method: 'PUT',
                     headers: {
@@ -185,6 +190,7 @@ export default {
                 });
                 const data = await res.json();
                 if (res.ok) {
+                    this.loading = false;
                     this.response = 'Travel updated successfully!';
                     this.closeModal();
                     window.location.reload();
@@ -199,11 +205,13 @@ export default {
         },
         async submitDelete() {
             try {
+                this.loading = true;
                 const res = await fetch(`${this.store.api.baseUrl}travel/${this.selectedTravel.slug}`, {
                     method: 'DELETE'
                 });
                 const data = await res.json();
                 if (res.ok) {
+                    this.loading = false;
                     this.response = 'Travel deleted successfully!';
                     this.closeModal();
                     window.location.reload();

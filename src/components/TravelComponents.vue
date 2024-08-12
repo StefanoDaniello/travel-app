@@ -250,7 +250,7 @@
       </div>
     </div>
 
-    <div v-if="loader"	 class="loader-modal"	>
+    <div v-if="loader" class="loader-modal"	>
       <LoaderComponent/>
     </div>
 
@@ -623,6 +623,7 @@ export default {
       });
 
       try {
+        this.loader = true;
         const res = await fetch(this.store.api.baseUrl + "travel", {
           method: "POST",
           headers: {
@@ -630,7 +631,6 @@ export default {
           },
           body: formData,
         });
-        this.loader = true;
         const data = await res.json();
         if (res.ok) {
           this.loader = false;
@@ -936,17 +936,7 @@ export default {
   justify-content: center;
 }
 
-.loader-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 .modal-content {
   background: white;
   padding: 20px;

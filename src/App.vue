@@ -3,33 +3,39 @@
     <HeaderComponents />
     <div class="container d-flex justify-content-center container-view">
       <router-view></router-view>
+      <div class="loader-modal" v-if="loading">
+        <LoaderComponent/>
+      </div> 
     </div>
   </div>
-
-
-
 </template>
 
 <script>
 import axios from 'axios';
 import { store } from "./store";  
 import HeaderComponents from './components/HeaderComponents.vue';
+import LoaderComponent from './components/LoaderComponent.vue';
 export default {
   name: 'App',
   components: {
-    HeaderComponents
+    HeaderComponents,
+    LoaderComponent
+
   },
   data() {
     return {
-      store
+      store,
+      loading: false
     }
   },
  
   methods: {
     getTravels() {
+      this.loading = true
       axios
         .get(this.store.api.baseUrl+ 'travel')
         .then((response) => {
+          this.loading = false
           this.store.data.travels = response.data;
           console.log( this.store.data.travels);
         })

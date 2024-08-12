@@ -68,7 +68,7 @@
 
             <label for="luogo">Luogo<strong class="text-danger">*</strong>:</label>
             <input class="mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
-              @input="handleInput" maxlength="255" minlength="7" />
+              @input="handleInput" maxlength="255" placeholder="Inserisci il luogo" />
             <div id="resultsContainer" class="results-container"></div>
             <div id="map"></div>
             <span v-if="errors.luogo" class="error-message">{{
@@ -193,7 +193,7 @@
               <div>
                 <label for="via">Luogo<strong class="text-danger">*</strong>:</label>
                 <input type="text" :id="'road_via_' + index" v-model="road.via" @input="handleRoadInput(index)"
-                  class="form-control mb-2" />
+                  class="form-control mb-2" placeholder="Inserisci il luogo"/>
                 <div :id="'road_resultsContainer_' + index" class="results-container"></div>
                 <div :id="'road_map_' + index" class="road-map"></div>
               </div>
@@ -250,6 +250,11 @@
       </div>
     </div>
 
+    <div v-if="loader"	 class="loader-modal"	>
+      <LoaderComponent/>
+    </div>
+
+
     <div v-if="response" class="response-message" ref="responseMessage">
       <p>{{ response }}</p>
     </div>
@@ -258,10 +263,15 @@
 
 <script>
 import { store } from "../store";
+import LoaderComponent from "./LoaderComponent.vue";
 export default {
   name: "TravelComponent",
+  components: {
+    LoaderComponent
+  },
   data() {
     return {
+      loader: false,
       maps: [],
       markers: [],
       map: null,
@@ -454,6 +464,7 @@ export default {
         const newIndex = this.form.roads.length - 1;
         this.initializeRoadMap(newIndex); // Inizializza la mappa per la nuova road
       });
+      console.log(this.form.luogo);
     },
     setRoadRating(index, rating) {
       this.form.roads[index].rate = rating;
@@ -475,6 +486,7 @@ export default {
     validateForm() {
       let isValid = true;
       this.errors = {};
+      console.log(this.errors);
 
       // Normalize travel dates
       const travelStartDate = this.normalizeDate(this.form.start_date);
@@ -618,8 +630,10 @@ export default {
           },
           body: formData,
         });
+        this.loader = true;
         const data = await res.json();
         if (res.ok) {
+          this.loader = false;
           this.response = "Travel added successfully!";
           this.$router
             .push("/")
@@ -922,6 +936,17 @@ export default {
   justify-content: center;
 }
 
+.loader-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .modal-content {
   background: white;
   padding: 20px;

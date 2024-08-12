@@ -105,11 +105,13 @@
 </template>
 <script>
 import { store } from "../store";
-// import L from "leaflet";
-
+import LoaderComponent from "./LoaderComponent.vue";
 export default {
     name: 'CardComponent',
     props: ['travel'],
+    components: {
+        LoaderComponent
+    },
     data() {
         return {
             store,

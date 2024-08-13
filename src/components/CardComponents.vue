@@ -31,18 +31,21 @@
                             </div>
                             <div>
                                 <strong>Piatti:</strong>
-                                <textarea id="meal" v-model="selectedTravel.meal" class="form-control w-75">{{ selectedTravel.meal }}</textarea>
+                                <textarea id="meal" v-model="selectedTravel.meal"
+                                    class="form-control w-75">{{ selectedTravel.meal }}</textarea>
                             </div>
                             <div class="mt-3">
                                 <strong>Curiosità:</strong>
-                                <textarea id="curiosity" v-model="selectedTravel.curiosity" class="form-control w-75">{{ selectedTravel.curiosity }}</textarea>
+                                <textarea id="curiosity" v-model="selectedTravel.curiosity"
+                                    class="form-control w-75">{{ selectedTravel.curiosity }}</textarea>
                             </div>
                             <div class="mt-3">
                                 <strong>Descrizione:</strong>
-                                <textarea id="description" v-model="selectedTravel.description" class="form-control w-75">{{ selectedTravel.description }}</textarea>
+                                <textarea id="description" v-model="selectedTravel.description"
+                                    class="form-control w-75">{{ selectedTravel.description }}</textarea>
                             </div>
                         </div>
-                        <div class="map-container" >
+                        <div class="map-container">
                             <p><strong>Luogo:</strong> {{ selectedTravel.luogo }}</p>
                             <div id="map" class="map"></div>
                         </div>
@@ -58,11 +61,13 @@
                             </div>
                             <div>
                                 <strong>Descrizione:</strong>
-                                <textarea id="road_description" v-model="road.description" class="form-control w-75">{{ road.description }}</textarea>
+                                <textarea id="road_description" v-model="road.description"
+                                    class="form-control w-75">{{ road.description }}</textarea>
                             </div>
                             <div class="mt-3">
                                 <strong>Note:</strong>
-                                <textarea id="road_note" v-model="road.note" class="form-control w-75">{{ road.note }}</textarea>
+                                <textarea id="road_note" v-model="road.note"
+                                    class="form-control w-75">{{ road.note }}</textarea>
                             </div>
                             <div class="star-rating mt-3">
                                 <div>
@@ -70,7 +75,7 @@
                                     <small class="text-muted">Clicca per valutare</small>
                                 </div>
                                 <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= road.rate }"
-                                @click="setRoadRating(index, star)">&#9733;</span>
+                                    @click="setRoadRating(index, star)">&#9733;</span>
                             </div>
                         </div>
                         <div class="road-image pb-4">
@@ -80,7 +85,8 @@
                         </div>
                     </div>
                     <div class="d-flex">
-                        <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva Modifiche</button>
+                        <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva
+                            Modifiche</button>
                         <button type="button" class="btn btn-danger mx-3" @click="DeteleModal">Elimina</button>
                     </div>
                 </form>
@@ -92,7 +98,8 @@
                                 <h2>Conferma Eliminazione</h2>
                                 <p>Sei sicuro di voler eliminare {{ selectedTravel.name }}?</p>
                                 <div class="d-flex  justify-content-between">
-                                    <button type="button" class="btn btn-secondary" @click="closeDeteleModal">Annulla</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        @click="closeDeteleModal">Annulla</button>
                                     <button type="submit" class="btn btn-danger">Elimina</button>
                                 </div>
                             </form>
@@ -100,7 +107,7 @@
                     </div>
                 </div>
                 <div v-if="loading" class="loader-modal">
-                    <LoaderComponent2/>
+                    <LoaderComponent2 />
                 </div>
             </div>
         </div>
@@ -134,22 +141,22 @@ export default {
         averageRating() {
             if (this.selectedTravel && this.selectedTravel.road.length > 0) {
                 const totalRating = this.selectedTravel.road.reduce((sum, road) => sum + (road.rate || 0), 0);
-                return (totalRating / this.selectedTravel.road.length).toFixed(1); 
+                return (totalRating / this.selectedTravel.road.length).toFixed(1);
             }
-            return 0; 
+            return 0;
         },
         averageRatingStars() {
             const rating = parseFloat(this.averageRating);
             let stars = '';
             for (let i = 1; i <= 5; i++) {
-                const fillColor = i <= rating ? 'gold' : '#d3d3d3'; 
+                const fillColor = i <= rating ? 'gold' : '#d3d3d3';
                 stars += `<span style="color: ${fillColor}; font-size: 1.2em; margin-right: 2px;">&#9733;</span>`;
             }
             return stars;
         },
         isModified() {
-        return JSON.stringify(this.selectedTravel) !== JSON.stringify(this.originalTravel);
-    }
+            return JSON.stringify(this.selectedTravel) !== JSON.stringify(this.originalTravel);
+        }
     },
     methods: {
         closeDeteleModal() {
@@ -160,22 +167,46 @@ export default {
         },
         setRoadRating(index, rating) {
             this.selectedTravel.road[index].rate = rating;
+            this.updateStarClasses(); // Aggiorna le classi delle stelle quando viene modificato il rating
         },
         showModal(travel) {
             this.selectedTravel = { ...travel, road: [...travel.road] };
-            this.originalTravel = JSON.parse(JSON.stringify(this.selectedTravel)); 
+            this.originalTravel = JSON.parse(JSON.stringify(this.selectedTravel));
             this.previewImage = this.getImage;
 
             this.$nextTick(() => {
                 this.initializeMap(); // Inizializza la mappa principale
                 this.initializeRoadMaps(); // Inizializza le mappe per ogni road
+                this.updateStarClasses(); // Aggiorna le classi delle stelle
+            });
+        },
+        closeModal() {
+            // Ripristina il valore delle stelle e le relative classi alla chiusura della modale
+            this.selectedTravel.road.forEach((road, index) => {
+                road.rate = this.originalTravel.road[index].rate;
+            });
+            this.updateStarClasses(); // Aggiorna le classi delle stelle dopo il ripristino
+
+            this.selectedTravel = null;
+        },
+        updateStarClasses() {
+            this.$nextTick(() => {
+                this.selectedTravel.road.forEach((road, roadIndex) => {
+                    for (let i = 1; i <= 5; i++) {
+                        const starElement = document.querySelector(`.road-item:nth-child(${roadIndex + 1}) .star:nth-child(${i})`);
+                        if (starElement) {
+                            if (i <= road.rate) {
+                                starElement.classList.add('filled');
+                            } else {
+                                starElement.classList.remove('filled');
+                            }
+                        }
+                    }
+                });
             });
         },
         roadImage(img) {
             return img ? `${this.store.api.imgBasePath}${img}` : this.defaultImg;
-        },
-        closeModal() {
-            this.selectedTravel = null;
         },
         handleImgError(event) {
             event.target.src = this.defaultImg;
@@ -366,12 +397,14 @@ export default {
     border: 0;
     border-radius: 0;
     background-color: transparent;
+
     &:hover {
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         transition: box-shadow 0.3s ease-in-out;
         border-radius: 20px;
         cursor: pointer;
     }
+
     .image-container {
         position: relative;
         overflow: hidden;
@@ -414,6 +447,7 @@ export default {
 
         p {
             margin: 0;
+
             &.address {
                 font-size: 0.8rem;
                 margin-top: 5px;
@@ -472,15 +506,18 @@ export default {
 
 .modal-buttons {
     margin-top: 20px;
+
     button {
         padding: 10px 20px;
         border-radius: 5px;
         font-size: 1rem;
     }
+
     .btn-success {
         background-color: #28a745;
         border: none;
     }
+
     .btn-danger {
         background-color: #dc3545;
         border: none;

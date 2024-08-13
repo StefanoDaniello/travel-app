@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <div class="d-flex">
-                        <button type="submit" class="btn btn-success text-white">Salva Modifiche</button>
+                        <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva Modifiche</button>
                         <button type="button" class="btn btn-danger mx-3" @click="DeteleModal">Elimina</button>
                     </div>
                 </form>
@@ -147,7 +147,10 @@ export default {
                 stars += `<span style="color: ${fillColor}; font-size: 1.2em; margin-right: 2px;">&#9733;</span>`;
             }
             return stars;
-        }
+        },
+        isModified() {
+        return JSON.stringify(this.selectedTravel) !== JSON.stringify(this.originalTravel);
+    }
     },
     methods: {
         closeDeteleModal() {
@@ -161,6 +164,7 @@ export default {
         },
         showModal(travel) {
             this.selectedTravel = { ...travel, road: [...travel.road] };
+            this.originalTravel = JSON.parse(JSON.stringify(this.selectedTravel)); 
             this.previewImage = this.getImage;
 
             this.$nextTick(() => {
@@ -178,6 +182,7 @@ export default {
             event.target.src = this.defaultImg;
         },
         async submitUpdate() {
+
             try {
                 this.loading = true;
                 const res = await fetch(`${this.store.api.baseUrl}travel/${this.selectedTravel.slug}`, {
@@ -254,7 +259,6 @@ export default {
 
 
 <style lang="scss" scoped>
-
 .star {
     font-size: 24px;
     color: #d3d3d3;

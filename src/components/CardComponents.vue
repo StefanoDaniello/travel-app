@@ -85,9 +85,14 @@
                         </div>
                     </div>
                     <div class="d-flex">
-                        <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva
+                        <div>
+                           <small class="text-danger d-block" v-if="!isModified">Non ci sono modifiche</small>
+                           <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva
                             Modifiche</button>
-                        <button type="button" class="btn btn-danger mx-3" @click="DeteleModal">Elimina</button>
+                            <button type="button" class="btn btn-danger mx-3" @click="DeteleModal">Elimina</button>
+                        </div>
+                      
+                       
                     </div>
                 </form>
                 <div v-if="dModal == 1">

@@ -31,7 +31,7 @@
       </div>
       <div class="container">
         <div class="row">
-          <div class="col-6">
+          <div class="col-12 col-md-6 my-2">
             <label for="image">Immagine viaggio:</label>
             <div>
               <input type="file" id="image" @change="handleFileUpload" class="d-none" />
@@ -63,9 +63,7 @@
             }}</span>
           </div>
 
-          <div class="col-6">
-            <!-- <input type="text" id="luogo" class="form-control"> -->
-
+          <div class="col-12 col-md-6 my-2">
             <label for="luogo">Luogo<strong class="text-danger">*</strong>:</label>
             <input class="mb-3 form-control" type="text" id="address" name="address" v-model="form.luogo"
               @input="handleInput" maxlength="255" placeholder="Inserisci il luogo" />
@@ -154,7 +152,7 @@
 
         <div class="container">
           <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-md-6 my-2">
               <label :for="'road_image_' + index">Immagine Rotta:</label>
               <div>
                 <input type="file" :id="'road_image_' + index" @change="(event) => handleRoadFileUpload(event, index)"
@@ -189,7 +187,7 @@
                 }}</span>
             </div>
 
-            <div class="col-6">
+            <div class="col-12 col-md-6 my-2">
               <div>
                 <label for="via">Luogo<strong class="text-danger">*</strong>:</label>
                 <input type="text" :id="'road_via_' + index" v-model="road.via" @input="handleRoadInput(index)"
@@ -200,8 +198,6 @@
               <span v-if="errors[`road_${index}_via`]" class="error-message">{{ errors[`road_${index}_via`]
                 }}</span>
             </div>
-
-
           </div>
         </div>
 
@@ -253,7 +249,6 @@
     <div v-if="loader" class="loader-modal"	>
       <LoaderComponent/>
     </div>
-
 
     <div v-if="response" class="response-message" ref="responseMessage">
       <p>{{ response }}</p>
@@ -1123,5 +1118,16 @@ textarea {
     padding: 10px;
     font-size: 14px;
   }
+  .send-button {
+    font-size: 14px;
+    padding: 10px 15px;
+    margin-top: 10px;
+  }
+  .add-road{
+    font-size: 14px;
+    padding: 12px 18px;
+    margin-top: 10px;
+  }
+  
 }
 </style>

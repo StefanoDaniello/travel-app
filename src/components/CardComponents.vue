@@ -84,7 +84,7 @@
                         <button type="button" class="btn btn-danger mx-3" @click="DeteleModal">Elimina</button>
                     </div>
                 </form>
-                <div v-if="io == 1">
+                <div v-if="dModal == 1">
                     <div class="modal" @click.self="closeDeteleModal">
                         <div class="modal-detele-content">
                             <span class="close" @click="closeDeteleModal">&times;</span>
@@ -121,7 +121,7 @@ export default {
             selectedTravel: null,
             previewImage: '',
             defaultImg: '/images/placeholder.png',
-            io: null,
+            dModal: null,
             map: null,
             roadMaps: [],
             loading: false
@@ -134,11 +134,10 @@ export default {
         averageRating() {
             if (this.selectedTravel && this.selectedTravel.road.length > 0) {
                 const totalRating = this.selectedTravel.road.reduce((sum, road) => sum + (road.rate || 0), 0);
-                return (totalRating / this.selectedTravel.road.length).toFixed(1); // Fissa a una decimale
+                return (totalRating / this.selectedTravel.road.length).toFixed(1); 
             }
-            return 0; // Ritorna 0 se non ci sono rotte o valutazioni
+            return 0; 
         },
-        // Genera il markup delle stelline per il voto medio
         averageRatingStars() {
             const rating = parseFloat(this.averageRating);
             let stars = '';
@@ -154,10 +153,10 @@ export default {
     },
     methods: {
         closeDeteleModal() {
-            this.io = 0;
+            this.dModal = 0;
         },
         DeteleModal() {
-            this.io = 1;
+            this.dModal = 1;
         },
         setRoadRating(index, rating) {
             this.selectedTravel.road[index].rate = rating;

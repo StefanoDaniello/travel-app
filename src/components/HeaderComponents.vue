@@ -358,4 +358,34 @@ header {
         transform: rotate(0) scale(1);
     }
 }
+@media screen and (max-width: 760px) {
+    .float-button {
+        right: 60px;
+        bottom: 60px;
+    }
+    .wrapper .tooltip {
+        height: 60px; /* Riduce l'altezza del tooltip */
+        padding: 10px 20px; /* Riduce il padding interno */
+    }
+}
+@media screen and (max-width: 575px) {
+    .float-button {
+        right: 30px;
+        bottom: 60px;
+    }
+    .wrapper {
+        --width: 70px; /* Riduce la larghezza del pulsante */
+        --height: 70px; /* Riduce l'altezza del pulsante */
+    }
+    .wrapper .tooltip {
+        display: none;
+    }
+    .wrapper .btn::before {
+    height: 22px;
+    }
+    .wrapper .btn::after {
+        width: 22px;
+    }
+
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card" @click="showModal(travel)">
+        <div class="card mb-3" @click="showModal(travel)">
             <div class="image-container">
                 <img :src="getImage" :alt="travel.name" @error="handleImgError" loading="lazy" class="card-img-top">
             </div>
@@ -21,7 +21,7 @@
                         <img :src="previewImage" :alt="selectedTravel.name" @error="handleImgError" loading="lazy"
                             class="modal-img-top">
                     </div>
-                    <div class="d-flex justify-content-between flex-wrap my-4">
+                    <div class="travel-input my-4">
                         <div class="details">
                             <h3>Voto del Viaggio: <span v-html="averageRatingStars"></span>
                             </h3>
@@ -32,17 +32,17 @@
                             <div>
                                 <strong>Piatti:</strong>
                                 <textarea id="meal" v-model="selectedTravel.meal"
-                                    class="form-control w-75">{{ selectedTravel.meal }}</textarea>
+                                    class="form-control">{{ selectedTravel.meal }}</textarea>
                             </div>
                             <div class="mt-3">
                                 <strong>Curiosità:</strong>
                                 <textarea id="curiosity" v-model="selectedTravel.curiosity"
-                                    class="form-control w-75">{{ selectedTravel.curiosity }}</textarea>
+                                    class="form-control ">{{ selectedTravel.curiosity }}</textarea>
                             </div>
                             <div class="mt-3">
                                 <strong>Descrizione:</strong>
                                 <textarea id="description" v-model="selectedTravel.description"
-                                    class="form-control w-75">{{ selectedTravel.description }}</textarea>
+                                    class="form-control ">{{ selectedTravel.description }}</textarea>
                             </div>
                         </div>
                         <div class="map-container">
@@ -62,12 +62,12 @@
                             <div>
                                 <strong>Descrizione:</strong>
                                 <textarea id="road_description" v-model="road.description"
-                                    class="form-control w-75">{{ road.description }}</textarea>
+                                    class="form-control ">{{ road.description }}</textarea>
                             </div>
                             <div class="mt-3">
                                 <strong>Note:</strong>
                                 <textarea id="road_note" v-model="road.note"
-                                    class="form-control w-75">{{ road.note }}</textarea>
+                                    class="form-control ">{{ road.note }}</textarea>
                             </div>
                             <div class="star-rating mt-3">
                                 <div>
@@ -80,8 +80,8 @@
                         </div>
                         <div class="road-image pb-4">
                             <img :src="roadImage(road.image)" :alt="road.name" @error="handleImgError" loading="lazy"
-                                class="card-img-top mb-3">
-                            <div :id="`road_map_${index}`" class="map "></div>
+                                class="modal-img-top mb-3">
+                            <div :id="`road_map_${index}`" class="map"></div>
                         </div>
                     </div>
                     <div class="d-flex">
@@ -89,7 +89,7 @@
                            <small class="text-danger d-block" v-if="!isModified">Non ci sono modifiche</small>
                            <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva
                             Modifiche</button>
-                            <button type="button" class="btn btn-danger mx-3" @click="DeteleModal">Elimina</button>
+                            <button type="button" class="btn btn-danger ms-2" @click="DeteleModal">Elimina</button>
                         </div>
                       
                        
@@ -340,7 +340,7 @@ export default {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 1000px;
+    width: 75%;
     max-width: 100%;
     max-height: 95%;
     overflow-y: auto;
@@ -350,7 +350,7 @@ export default {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 500px;
+    width: 80%;
     max-width: 100%;
     max-height: 95%;
     overflow-y: auto;
@@ -441,6 +441,7 @@ export default {
         transition: transform 0.3s ease-in-out;
         border-radius: 10px;
 
+
         &:hover {
             transform: scale(1.1);
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -461,14 +462,15 @@ export default {
     }
 }
 
-.details-container {
-    margin-bottom: 20px;
-}
-
 .details {
     flex: 1;
     padding-right: 20px;
     width: 50%;
+}
+.travel-input{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .map-container {
@@ -526,6 +528,28 @@ export default {
     .btn-danger {
         background-color: #dc3545;
         border: none;
+    }
+}
+@media screen and (max-width: 992px) {
+    .travel-input{
+        display: block;
+    }
+
+    .details {
+        width: 100%;
+    }
+    .map-container {
+        margin-top: 20px;
+        margin-bottom: 60px;
+        max-width: 100%;
+    }
+    .road-item{
+        display: block;
+        margin-bottom: 240px;
+        .road-image {
+            width: 100%;
+            height: 250px;
+        }
     }
 }
 </style>

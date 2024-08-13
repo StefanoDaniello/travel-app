@@ -1,7 +1,7 @@
  <template>
     <div class="container">
         <div class="row" v-if="store.data.travels.length > 0">
-            <div class="col-4" v-for="travel in store.data.travels" >
+            <div class="col-12 col-md-6 col-lg-4" v-for="travel in store.data.travels" >
                 <CardComponents :travel="travel" />
             </div>
         </div>

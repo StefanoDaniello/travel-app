@@ -12,7 +12,7 @@
                 <!-- Mostra Login e Registrati se userName è null -->
                 <div v-if="!userName" class="d-flex">
                     <router-link class="mx-3 router-link" to="/login">
-                        <h6>Login</h6>
+                        <h6>Accedi</h6>
                     </router-link>
                     <router-link class="router-link" to="/register">
                         <h6>Registrati</h6>
@@ -98,6 +98,7 @@ export default {
 
 .no-router {
     color: black;
+    text-decoration: none;
 }
 
 .router-link {

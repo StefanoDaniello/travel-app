@@ -1,6 +1,8 @@
 <template>
   <div class="login-container">
-    <h1>Login</h1>
+    <div class="text-center">
+      <h1>Accedi</h1>
+    </div>
     <form @submit.prevent="handleSubmit" class="login-form">
       <div class="form-group">
         <label for="email">Email:</label>
@@ -11,9 +13,13 @@
         <input type="password" id="password" v-model="password" class="form-control" required maxlength="50"
           minlength="8" />
       </div>
-      <button class="btn btn-success mt-2" type="submit">
-        Login
+      <div class="text-center">
+        <button class="btn btn-primary mt-2 text-white w-50" type="submit">
+        Accedi
       </button>
+      <p class="mt-3">Non hai un account? <router-link to="/register">Registrati</router-link></p>
+      </div>
+
     </form>
 
     <div v-if="loader" class="loader-modal">
@@ -128,7 +134,7 @@ export default {
 
 <style lang="scss" scoped>
 .login-container {
-  max-width: 400px;
+  width: 400px;
   margin: 50px auto;
   padding: 20px;
   background-color: #fff;

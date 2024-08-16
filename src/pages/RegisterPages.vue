@@ -40,7 +40,11 @@
           Registrati
         </button>
       </form>
-  
+      
+      <div v-if="loader" class="loader-modal">
+      <LoginRegisterLoad />
+    </div>
+    
       <!-- Messaggio di errore -->
       <div v-if="response" class="response-message" ref="responseMessage">
         <p>{{ response }}</p>
@@ -59,9 +63,13 @@
   
   <script>
   import { store } from '../store.js';
+  import LoginRegisterLoad from '../components/LoginRegisterLoad.vue';
   
   export default {
     name: 'RegisterPages',
+    components: {
+      LoginRegisterLoad
+    },
     data() {
       return {
         store,
@@ -70,12 +78,14 @@
         password: '',
         response: '',
         showModal: false,
-        countdown: 15
+        countdown: 15,
+        loader: false
       };
     },
     methods: {
       async handleRegister() {
         try {
+         this.loader = true;
           const userData = {
             name: this.name,
             email: this.email,
@@ -91,6 +101,7 @@
           });
   
           if (response.ok) {
+            this.loader = false;
             const result = await response.json();
             this.store.user.name = result.user.name;
             this.store.user.id = result.user.id;
@@ -99,9 +110,11 @@
             this.showModal = true;
             this.startCountdown();
           } else {
+            this.loader = false;
             this.response = 'Errore durante la registrazione. Riprovare.';
           }
         } catch (error) {
+          this.loader = false;
           this.response = 'Errore di rete o di server. Riprova tra poco!';
         }
       },

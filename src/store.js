@@ -10,4 +10,8 @@ export const store = reactive({
     travels: [],
     loading: false,
   },
+  user:{
+    id: '',
+    name: ''  
+  }
 });

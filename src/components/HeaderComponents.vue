@@ -1,78 +1,137 @@
 <template>
     <header>
-        <div class="d-flex justify-content-between container align-items-center">
-            <router-link to="/" class="no-router">
-                <h1>Travel App</h1>
+      <div class="d-flex justify-content-between container align-items-center">
+        <router-link to="/" class="no-router">
+          <h1>Travel App</h1>
+        </router-link>
+        <div class="d-flex align-items-center">
+          <router-link to="/" class="router-link">
+            <h6>Home</h6>
+          </router-link>
+  
+          <!-- Mostra Login e Registrati se userName è null -->
+          <div v-if="!userName" class="d-flex">
+            <router-link class="mx-3 router-link" to="/login">
+              <h6>Login</h6>
             </router-link>
-            <div>
-                <router-link to="/" class="router-link">
-                    <h6>Home</h6>
-                </router-link>
-                <router-link to="/travel" class="float-button" v-if="!isTravelRoute">
-                    <div class="wrapper">
-                        <input type="checkbox" />
-                        <div class="btn"></div>
-                        <div class="tooltip">
-                            <svg></svg>
-                            <span><strong class="text-white">Aggiungi un viaggio</strong></span>
-                        </div>
-                        <svg></svg>
-                    </div>
-                </router-link>
+            <router-link class="router-link" to="/register">
+              <h6>Registrati</h6>
+            </router-link>
+          </div>
+  
+          <!-- Mostra il nome dell'utente e il pulsante di logout se userName esiste -->
+          <div v-else class="d-flex align-items-center">
+            <h6 class="mx-3">Ciao, {{ userName }}!</h6>
+            <div @click="logout" id="logout-button" title="Logout">
+              <i class="fa-solid fa-right-from-bracket"></i>
             </div>
+          </div>
+  
+          <!-- Pulsante per aggiungere un viaggio -->
+          <router-link to="/travel" class="float-button" v-if="!isTravelRoute">
+            <div class="wrapper">
+              <input type="checkbox" />
+              <div class="btn"></div>
+              <div class="tooltip">
+                <svg></svg>
+                <span><strong class="text-white">Aggiungi un viaggio</strong></span>
+              </div>
+              <svg></svg>
+            </div>
+          </router-link>
         </div>
+      </div>
     </header>
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  import { store } from "../store";
+  export default {
     name: "HeaderComponents",
     data() {
-        return {
-        }
+      return {
+        store,
+        userName: localStorage.getItem('user_name') || null,  // Imposta userName all'avvio
+      };
     },
     computed: {
-        isTravelRoute() {
-            return this.$route.path === '/travel';
-        }
+      isTravelRoute() {
+        return this.$route.path === '/travel';
+      }
     },
-};
-</script>
+    watch: {
+      'store.user.name': {
+        immediate: true,
+        handler(newValue) {
+          if (newValue) {
+            this.userName = newValue;
+            localStorage.setItem('user_name', newValue);  // Aggiorna localStorage
+          }
+        }
+      }
+    },
+    methods: {
+      logout() {
+        // Elimina i dati dell'utente dallo store e dal localStorage
+        this.store.user.name = null;
+        this.store.user.id = null;
+        localStorage.removeItem('user_name');
+        localStorage.removeItem('user_id');
+        this.userName = null;  // Reset userName
+        // Reindirizza l'utente alla pagina di login
+        this.$router.push('/login');
+      }
+    }
+  };
+  </script>
 
 <style lang="scss" scoped>
-.no-router{
+#logout-button:hover{
+    cursor: pointer;
+    i{
+        color: red;
+    }
+}
+.no-router {
     color: black;
 }
+
 .router-link {
-  position: relative;
-  text-decoration: none; /* Rimuove eventuali decorazioni di testo predefinite */
+    position: relative;
+    text-decoration: none;
+    /* Rimuove eventuali decorazioni di testo predefinite */
 }
 
 /* Linea blu sotto il link attivo */
 .router-link-active:not(.no-router)::after {
-  content: "";
-  position: absolute;
-  bottom: -5px; /* Distanza dalla parte inferiore del link */
-  left: 0;
-  width: 100%;
-  height: 3px; /* Altezza della linea blu */
-  background-color: #007bff; /* Colore blu */
-  transition: all 0.3s ease; /* Transizione fluida */
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    /* Distanza dalla parte inferiore del link */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    /* Altezza della linea blu */
+    background-color: #007bff;
+    /* Colore blu */
+    transition: all 0.3s ease;
+    /* Transizione fluida */
 }
 
 /* Colore del testo normale */
 .router-link h6 {
-  color: black; 
+    color: black;
 }
 
 /* Linea blu sparisce quando il link non è attivo */
 .router-link:not(.router-link-active)::after {
-  content: none; 
+    content: none;
 }
 
 /* Colore del testo quando il mouse è sopra il link non attivo */
 .router-link:hover h6 {
-  color: #007bff; /* Colore blu per il testo */
+    color: #007bff;
+    /* Colore blu per il testo */
 }
 
 header {
@@ -85,6 +144,7 @@ header {
     padding-top: 20px;
     background-color: #e0e0e0;
 }
+
 .float-button {
     position: fixed;
     bottom: 100px;
@@ -133,8 +193,9 @@ header {
     align-items: center;
     animation: plus-animation-reverse 0.5s ease-out forwards;
 }
+
 .wrapper:hover .btn {
-  animation: plus-animation 0.5s ease-out forwards;
+    animation: plus-animation 0.5s ease-out forwards;
 }
 
 .wrapper .btn::before,
@@ -162,7 +223,7 @@ header {
     height: 75px;
     border-radius: 70px;
     position: absolute;
-    background:#a3a3a3d0;
+    background: #a3a3a3d0;
     z-index: 2;
     padding: 20px 35px;
     box-shadow: 0 10px 30px rgba(65, 72, 86, 0.05);
@@ -358,31 +419,42 @@ header {
         transform: rotate(0) scale(1);
     }
 }
+
 @media screen and (max-width: 760px) {
     .float-button {
         right: 60px;
         bottom: 60px;
     }
+
     .wrapper .tooltip {
-        height: 60px; /* Riduce l'altezza del tooltip */
-        padding: 10px 20px; /* Riduce il padding interno */
+        height: 60px;
+        /* Riduce l'altezza del tooltip */
+        padding: 10px 20px;
+        /* Riduce il padding interno */
     }
 }
+
 @media screen and (max-width: 575px) {
     .float-button {
         right: 30px;
         bottom: 60px;
     }
+
     .wrapper {
-        --width: 70px; /* Riduce la larghezza del pulsante */
-        --height: 70px; /* Riduce l'altezza del pulsante */
+        --width: 70px;
+        /* Riduce la larghezza del pulsante */
+        --height: 70px;
+        /* Riduce l'altezza del pulsante */
     }
+
     .wrapper .tooltip {
         display: none;
     }
+
     .wrapper .btn::before {
-    height: 22px;
+        height: 22px;
     }
+
     .wrapper .btn::after {
         width: 22px;
     }

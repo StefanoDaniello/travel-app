@@ -1,97 +1,101 @@
 <template>
     <header>
-      <div class="d-flex justify-content-between container align-items-center">
-        <router-link to="/" class="no-router">
-          <h1>Travel App</h1>
-        </router-link>
-        <div class="d-flex align-items-center">
-          <router-link to="/" class="router-link">
-            <h6>Home</h6>
-          </router-link>
-  
-          <!-- Mostra Login e Registrati se userName è null -->
-          <div v-if="!userName" class="d-flex">
-            <router-link class="mx-3 router-link" to="/login">
-              <h6>Login</h6>
+        <div class="d-flex justify-content-between container align-items-center">
+            <router-link to="/" class="no-router">
+                <h1>Travel App</h1>
             </router-link>
-            <router-link class="router-link" to="/register">
-              <h6>Registrati</h6>
-            </router-link>
-          </div>
-  
-          <!-- Mostra il nome dell'utente e il pulsante di logout se userName esiste -->
-          <div v-else class="d-flex align-items-center">
-            <h6 class="mx-3">Ciao, {{ userName }}!</h6>
-            <div @click="logout" id="logout-button" title="Logout">
-              <i class="fa-solid fa-right-from-bracket"></i>
+            <div class="d-flex align-items-center">
+                <router-link to="/" class="router-link">
+                    <h6>Home</h6>
+                </router-link>
+
+                <!-- Mostra Login e Registrati se userName è null -->
+                <div v-if="!userName" class="d-flex">
+                    <router-link class="mx-3 router-link" to="/login">
+                        <h6>Login</h6>
+                    </router-link>
+                    <router-link class="router-link" to="/register">
+                        <h6>Registrati</h6>
+                    </router-link>
+                </div>
+
+                <div v-else>
+                    <div class="d-flex align-items-center">
+                        <h6 class="mx-3">Ciao, {{ userName }}!</h6>
+                        <div @click="logout" id="logout-button" title="Logout">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </div>
+                    </div>
+
+                    <!-- Pulsante per aggiungere un viaggio -->
+                    <router-link to="/travel" class="float-button" v-if="!isTravelRoute">
+                        <div class="wrapper">
+                            <input type="checkbox" />
+                            <div class="btn"></div>
+                            <div class="tooltip">
+                                <svg></svg>
+                                <span><strong class="text-white">Aggiungi un viaggio</strong></span>
+                            </div>
+                            <svg></svg>
+                        </div>
+                    </router-link>
+                </div>
+
             </div>
-          </div>
-  
-          <!-- Pulsante per aggiungere un viaggio -->
-          <router-link to="/travel" class="float-button" v-if="!isTravelRoute">
-            <div class="wrapper">
-              <input type="checkbox" />
-              <div class="btn"></div>
-              <div class="tooltip">
-                <svg></svg>
-                <span><strong class="text-white">Aggiungi un viaggio</strong></span>
-              </div>
-              <svg></svg>
-            </div>
-          </router-link>
         </div>
-      </div>
     </header>
-  </template>
-  
-  <script>
-  import { store } from "../store";
-  export default {
+</template>
+
+<script>
+import { store } from "../store";
+export default {
     name: "HeaderComponents",
     data() {
-      return {
-        store,
-        userName: localStorage.getItem('user_name') || null,  // Imposta userName all'avvio
-      };
+        return {
+            store,
+            userName: localStorage.getItem('user_name') || null,  // Imposta userName all'avvio
+        };
     },
     computed: {
-      isTravelRoute() {
-        return this.$route.path === '/travel';
-      }
+        isTravelRoute() {
+            return this.$route.path === '/travel';
+        }
     },
     watch: {
-      'store.user.name': {
-        immediate: true,
-        handler(newValue) {
-          if (newValue) {
-            this.userName = newValue;
-            localStorage.setItem('user_name', newValue);  // Aggiorna localStorage
-          }
+        'store.user.name': {
+            immediate: true,
+            handler(newValue) {
+                if (newValue) {
+                    this.userName = newValue;
+                    localStorage.setItem('user_name', newValue);  // Aggiorna localStorage
+                }
+            }
         }
-      }
     },
     methods: {
-      logout() {
-        // Elimina i dati dell'utente dallo store e dal localStorage
-        this.store.user.name = null;
-        this.store.user.id = null;
-        localStorage.removeItem('user_name');
-        localStorage.removeItem('user_id');
-        this.userName = null;  // Reset userName
-        // Reindirizza l'utente alla pagina di login
-        this.$router.push('/login');
-      }
+        logout() {
+            // Elimina i dati dell'utente dallo store e dal localStorage
+            this.store.user.name = null;
+            this.store.user.id = null;
+            localStorage.removeItem('user_name');
+            localStorage.removeItem('user_id');
+            this.userName = null;  // Reset userName
+            // Reindirizza l'utente alla pagina di login
+            this.$router.push('/login');
+        }
     }
-  };
-  </script>
+};
+</script>
 
 <style lang="scss" scoped>
-#logout-button:hover{
+#logout-button:hover {
     cursor: pointer;
-    i{
+
+    i {
         color: red;
     }
 }
+
 .no-router {
     color: black;
 }

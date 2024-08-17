@@ -9,7 +9,7 @@
       <!-- Travel Form Fields -->
       <div class="form-group">
         <label for="name">Nome Viaggio<strong class="text-danger">*</strong>:</label>
-        <input type="text" id="name" v-model="form.name" class="form-control" />
+        <input type="text" id="name" v-model="form.name" class="form-control" ref="nameInput"/>
         <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
       </div>
 
@@ -283,6 +283,7 @@ export default {
         luogo: "",
         latitudine: 0,
         longitudine: 0,
+        user_id: localStorage.getItem("user_id"),
         roads: [
           {
             name: "",
@@ -312,10 +313,11 @@ export default {
     this.form.roads.forEach((_, index) => {
       this.initializeRoadMap(index); // Inizializza la mappa per ogni road esistente
     });
+    this.$refs.nameInput.focus();
+    console.log(this.form.user_id);
   },
 
   methods: {
-
     initializeMap() {
       this.map = L.map("map").setView([0, 0], 2); // Inizializza la mappa centrata su [0, 0]
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -598,6 +600,7 @@ export default {
       formData.append("luogo", this.form.luogo);
       formData.append("latitudine", this.form.latitudine);
       formData.append("longitudine", this.form.longitudine);
+      formData.append("user_id", this.form.user_id);
       if (this.imageFile) {
         formData.append("image", this.imageFile);
       }

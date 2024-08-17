@@ -119,14 +119,7 @@ export default {
     },
     redirectToHome() {
       this.$router.push('/');
-    },
-    logout() {
-      // Cancella i dati dallo store e dal localStorage
-      this.store.user.name = null;
-      this.store.user.id = null;
-      localStorage.removeItem('user_name');
-      localStorage.removeItem('user_id');
-      this.$router.push('/login');
+      window.location.reload();
     },
   },
 };

@@ -80,7 +80,7 @@ export default {
             localStorage.removeItem('user_name');
             localStorage.removeItem('user_id');
             this.userName = null;  // Reset userName
-            // Reindirizza l'utente alla pagina di login
+            window.location.reload();
             this.$router.push('/login');
         }
     }

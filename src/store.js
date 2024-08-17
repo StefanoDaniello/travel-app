@@ -15,3 +15,9 @@ export const store = reactive({
     name: ''  
   }
 });
+
+window.onload = () => {
+    store.user.id = localStorage.getItem('user_id');
+    store.user.name = localStorage.getItem('user_name');
+    console.log(store.user);
+}

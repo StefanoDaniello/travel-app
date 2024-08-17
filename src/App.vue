@@ -32,21 +32,30 @@ export default {
   methods: {
     getTravels() {
       this.loading = true
+      const userId = localStorage.getItem('user_id');
       axios
-        .get(this.store.api.baseUrl+ 'travel')
+        .get(this.store.api.baseUrl+ 'travel',{
+          params: {
+            user_id: userId
+          }
+          })
         .then((response) => {
           this.loading = false
           this.store.data.travels = response.data;
           console.log( this.store.data.travels);
         })
         .catch((error) => {
+          this.loading = false
           console.error(error);
         })
     },
    
   },
   mounted() {
-    this.getTravels();
+    if (localStorage.getItem('user_id')) {
+      this.getTravels();
+    }
+   
   },
 }
 </script>

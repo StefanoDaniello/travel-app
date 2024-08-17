@@ -33,7 +33,7 @@
     <!-- Modale di benvenuto -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
-        <h2>Benvenuto, {{ store.user.name }}!</h2>
+        <h2>Benvenuto, Stefano {{ store.user.name }}!</h2>
         <p>Verrai reindirizzato alla home tra {{ countdown }} secondi.</p>
         <button @click="redirectToHome" class="btn btn-primary">Vai alla Home</button>
       </div>
@@ -176,7 +176,7 @@ export default {
   background: #fff;
   padding: 20px;
   border-radius: 10px;
-  width: 50%;
+  width: 35%;
   text-align: center;
 }
 
@@ -191,5 +191,11 @@ export default {
 .modal-content .btn {
   background-color: #007bff;
   color: white;
+}
+@media screen and (max-width: 577px) {
+  .modal-content {
+    width: 60%;
+  }
+  
 }
 </style>

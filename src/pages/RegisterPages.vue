@@ -170,7 +170,7 @@ export default {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 50%;
+    width: 35%;
     text-align: center;
 }
 
@@ -185,5 +185,11 @@ export default {
 .modal-content .btn {
     background-color: #007bff;
     color: white;
+}
+@media screen and (max-width: 577px) {
+  .modal-content {
+    width: 60%;
+  }
+  
 }
 </style>

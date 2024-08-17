@@ -95,7 +95,8 @@ export default {
                     this.startCountdown();
                 } else {
                     this.loader = false;
-                    this.response = 'Errore durante la registrazione. Riprovare.';
+                    const errorData = await response.json();
+                    this.response = errorData.errors ? errorData.errors.join('<br>') : 'Errore sconosciuto. Riprova più tardi.';
                 }
             } catch (error) {
                 this.loader = false;

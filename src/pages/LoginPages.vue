@@ -101,7 +101,8 @@ export default {
           this.startCountdown();
         } else {
           this.loader = false;
-          this.response = 'Errore durante il login. Controlla la tua password e la tua email e riprova.';
+          this.response = 'Login non riuscito. Controlla le tue credenziali.';
+
         }
       } catch (error) {
         this.loader = false;

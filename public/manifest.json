@@ -1,0 +1,23 @@
+{
+    "name": "My App",
+    "short_name": "App",
+    "description": "A description of my app.",
+    "theme_color": "#4DBA87",
+    "background_color": "#ffffff",
+    "start_url": "/",
+    "display": "standalone",
+    "scope": "/",
+    "icons": [
+      {
+        "src": "img/icons/vue.js-logo.png",
+        "sizes": "360x360",
+        "type": "image/png"
+      },
+      {
+        "src": "img/icons/vue.js-logo.png",
+        "sizes": "360x360",
+        "type": "image/png"
+      }
+    ]
+  }
+  

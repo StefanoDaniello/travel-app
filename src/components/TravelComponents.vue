@@ -350,7 +350,7 @@ export default {
     },
     async handleInput() {
       const query = this.form.luogo;
-      if (query.length < 5) return;
+      if (query.length < 2) return;
 
       this.results = await this.fetchAddresses(query);
       this.displayResults();
@@ -421,7 +421,7 @@ export default {
     async handleRoadInput(index) {
       // Gestisci l'input per il campo via e aggiorna i risultati e la mappa
       const query = this.form.roads[index].via;
-      if (query.length < 5) return;
+      if (query.length < 2) return;
 
       this.results = await this.fetchAddresses(query);
       this.displayRoadResults(index);

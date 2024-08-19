@@ -1,7 +1,7 @@
 {
-    "name": "My App",
-    "short_name": "App",
-    "description": "A description of my app.",
+    "name": "Travel App",
+    "short_name": "T.App",
+    "description": "Organizza i tuoi viaggi.",
     "theme_color": "#4DBA87",
     "background_color": "#ffffff",
     "start_url": "/",

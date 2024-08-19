@@ -86,13 +86,13 @@
                     </div>
                     <div class="d-flex">
                         <div>
-                           <small class="text-danger d-block" v-if="!isModified">Non ci sono modifiche</small>
-                           <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva
-                            Modifiche</button>
+                            <small class="text-danger d-block" v-if="!isModified">Non ci sono modifiche</small>
+                            <button type="submit" class="btn btn-success text-white" :disabled="!isModified">Salva
+                                Modifiche</button>
                             <button type="button" class="btn btn-danger ms-2" @click="DeteleModal">Elimina</button>
                         </div>
-                      
-                       
+
+
                     </div>
                 </form>
                 <div v-if="dModal == 1">
@@ -116,6 +116,9 @@
                 </div>
             </div>
         </div>
+        <div v-if="response" class="response-message" >
+            <p>{{ response }} </p>
+        </div>
     </div>
 </template>
 <script>
@@ -136,7 +139,8 @@ export default {
             dModal: null,
             map: null,
             roadMaps: [],
-            loading: false
+            loading: false,
+            response: null
         };
     },
     computed: {
@@ -231,15 +235,14 @@ export default {
                 const data = await res.json();
                 if (res.ok) {
                     this.loading = false;
-                    this.response = 'Travel updated successfully!';
+                    this.response = 'Viaggio aggiornato con successo!';
                     this.closeModal();
                     window.location.reload();
-                } else {
-                    this.response = 'Error updating travel!';
-                }
+                } 
                 console.log(data);
             } catch (error) {
-                this.response = 'Error updating travel!';
+                this.loading = false;
+                this.response = 'Errore di rete o di server. Riprova tra poco!';
                 console.error(error);
             }
         },
@@ -252,15 +255,14 @@ export default {
                 const data = await res.json();
                 if (res.ok) {
                     this.loading = false;
-                    this.response = 'Travel deleted successfully!';
+                    this.response = 'Viaggio eliminato con successo!';
                     this.closeModal();
                     window.location.reload();
-                } else {
-                    this.response = 'Error deleting travel!';
                 }
                 console.log(data);
             } catch (error) {
-                this.response = 'Error deleting travel!';
+                this.loading = false;
+                this.response = 'Errore di rete o di server. Riprova tra poco!';
                 console.error(error);
             }
         },
@@ -350,7 +352,7 @@ export default {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 80%;
+    width: 40%;
     max-width: 100%;
     max-height: 95%;
     overflow-y: auto;
@@ -467,7 +469,8 @@ export default {
     padding-right: 20px;
     width: 50%;
 }
-.travel-input{
+
+.travel-input {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -530,26 +533,46 @@ export default {
         border: none;
     }
 }
+.response-message {
+  position: fixed;
+  top: 50px;
+  right: 10px;
+  background: #ff0000;
+  color: white;
+  padding: 10px 10px 0px 10px;
+  z-index: 3000;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 @media screen and (max-width: 992px) {
-    .travel-input{
+    .travel-input {
         display: block;
     }
 
     .details {
         width: 100%;
     }
+
     .map-container {
         margin-top: 20px;
         margin-bottom: 60px;
         max-width: 100%;
     }
-    .road-item{
+
+    .road-item {
         display: block;
         margin-bottom: 240px;
+
         .road-image {
             width: 100%;
             height: 250px;
         }
+    }
+}
+@media screen and (max-width: 575px) {
+    .modal-detele-content {
+    width: 60%;
     }
 }
 </style>

@@ -3,7 +3,6 @@ import App from './App.vue'
 import { router } from './router'
 import './assets/styles/main.scss'
 
-// Registrazione del Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')

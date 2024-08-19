@@ -250,8 +250,8 @@
       <LoaderComponent/>
     </div>
 
-    <div v-if="response" class="response-message" ref="responseMessage">
-      <p>{{ response }}</p>
+    <div v-if="response" class="response-message" >
+      <p>{{ response }}	</p>
     </div>
   </div>
 </template>
@@ -632,19 +632,18 @@ export default {
         const data = await res.json();
         if (res.ok) {
           this.loader = false;
-          this.response = "Travel added successfully!";
+          this.response = "Viaggio creato con successo!";
           this.$router
             .push("/")
             .then(() => {
               window.location.reload(); // Forza il refresh della pagina
             })
-            .catch((err) => console.error("Error while redirecting:", err));
-        } else {
-          this.response = "Error adding travel!";
+            .catch((err) => console.error("Errore:", err));
         }
         console.log(data);
       } catch (error) {
-        this.response = "Error adding travel!";
+        this.loader = false;
+        this.response = "Errore di rete o di server. Riprova tra poco!";
         console.error(error);
       }
     },
@@ -1091,11 +1090,12 @@ textarea {
 
 .response-message {
   position: fixed;
-  top: 10px;
+  top: 90px;
   right: 10px;
-  background: #007bff;
+  background: #ff0000;
   color: white;
-  padding: 15px;
+  padding: 10px 10px 0px 10px;
+  z-index: 1000;
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

@@ -22,13 +22,13 @@
                 <div v-else>
                     <div class="d-flex align-items-center">
                         <h6 class="mx-3">Ciao, {{ userName }}!</h6>
-                        <div @click="logout" id="logout-button" title="Logout">
+                        <div @click="showLogoutModal" id="logout-button" title="Logout">
                             <i class="fa-solid fa-right-from-bracket"></i>
                         </div>
                     </div>
 
                     <!-- Pulsante per aggiungere un viaggio -->
-                    <router-link to="/travel" class="float-button" v-if="!isTravelRoute">
+                    <router-link to="/travel" class="float-button" >
                         <div class="wrapper">
                             <input type="checkbox" />
                             <div class="btn"></div>
@@ -40,11 +40,23 @@
                         </div>
                     </router-link>
                 </div>
-
             </div>
         </div>
     </header>
+
+    <!-- Modale di conferma per il logout -->
+    <div v-if="showModal" class="modal-overlay">
+        s
+        <div class="modal-content">
+            <h5>Sei sicuro di voler effettuare il logout?</h5>
+            <div class="modal-buttons">
+                <button @click="confirmLogout" class="btn btn-danger">Logout</button>
+                <button @click="closeLogoutModal" class="btn btn-secondary">Annulla</button>
+            </div>
+        </div>
+    </div>
 </template>
+
 
 <script>
 import { store } from "../store";
@@ -53,7 +65,9 @@ export default {
     data() {
         return {
             store,
-            userName: localStorage.getItem('user_name') || null,  // Imposta userName all'avvio
+            showModal: false,
+            userName: localStorage.getItem('user_name') || null, 
+            
         };
     },
     computed: {
@@ -73,21 +87,59 @@ export default {
         }
     },
     methods: {
-        logout() {
-            // Elimina i dati dell'utente dallo store e dal localStorage
-            this.store.user.name = null;
-            this.store.user.id = null;
-            localStorage.removeItem('user_name');
-            localStorage.removeItem('user_id');
-            this.userName = null;  // Reset userName
-            window.location.reload();
-            this.$router.push('/login');
+        showLogoutModal() {
+            this.showModal = true;
+            console.log(this.showModal);
+        },
+        closeLogoutModal() {
+            this.showModal = false;
+        },
+        confirmLogout() {
+            this.showModal = false;
+               // Elimina i dati dell'utente dallo store e dal localStorage
+               this.store.user.name = null;
+                this.store.user.id = null;
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_id');
+                this.userName = null;  // Reset userName
+                window.location.reload();
+                this.$router.push('/login');
         }
     }
 };
 </script>
 
 <style lang="scss" scoped>
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 40%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.modal-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
 #logout-button:hover {
     cursor: pointer;
 
@@ -462,6 +514,9 @@ header {
 
     .wrapper .btn::after {
         width: 22px;
+    }
+    .modal-content {
+        width: 60%;
     }
 
 }

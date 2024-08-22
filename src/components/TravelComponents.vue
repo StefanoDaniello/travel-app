@@ -335,7 +335,7 @@ export default {
     },
     async fetchAddresses(query) {
       const apiBaseUrl = "https://api.tomtom.com/search/2/search/";
-      const apiKey = "z3nuCqYtSq2WG00yWsSJx06bIabR9bRc"; // La tua API key
+      const apiKey = "z3nuCqYtSq2WG00yWsSJx06bIabR9bRc"; //API key
       try {
         const response = await fetch(
           `${apiBaseUrl}${query}.json?key=${apiKey}`

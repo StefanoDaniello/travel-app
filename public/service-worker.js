@@ -7,7 +7,6 @@ const urlsToCache = [
   '/img/icons/vue.js-logo.png',
 ];
 
-// Install event: caching files
 self.addEventListener('install', function(e) {
   console.log('Service Worker: Installed');
   // self.skipWaiting();  // Forza l'attivazione immediata
@@ -19,7 +18,7 @@ self.addEventListener('install', function(e) {
   );
 });
 
-// Activate event: cleaning old caches
+// elimina la cache vecchie
 self.addEventListener('activate', function(e) {
   console.log('Service Worker: Activated');
   e.waitUntil(
@@ -36,7 +35,6 @@ self.addEventListener('activate', function(e) {
   );
 });
 
-// Fetch event: serving cached content or fetching from network
 self.addEventListener('fetch', function(e) {
   console.log('Service Worker: Fetching', e.request.url);
 
@@ -56,7 +54,7 @@ self.addEventListener('fetch', function(e) {
       }).catch(function() {
         // Opzionalmente, ritorna una pagina di fallback in caso di errore
         console.error('Fetch failed; returning offline page.');
-        return caches.match('/offline.html');  // Assicurati che questo file esista nella cache
+        return caches.match('/offline.html');  
       })
     );
   } else {

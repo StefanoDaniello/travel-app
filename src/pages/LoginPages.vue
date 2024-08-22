@@ -3,7 +3,7 @@
     <div class="text-center">
       <h1>Accedi</h1>
     </div>
-    <form @submit.prevent="handleSubmit" class="login-form">
+    <form @submit.prevent="handleSubmit" class="login-form" method="post">
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" v-model="email" class="form-control" required maxlength="100" minlength="10" />

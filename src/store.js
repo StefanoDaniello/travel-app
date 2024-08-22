@@ -2,8 +2,8 @@ import { reactive } from "vue";
 
 export const store = reactive({
   api: {
-    baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://git.heroku.com/travel-app-laravel.git/api/',
-    imgBasePath: import.meta.env.VITE_IMG_BASE_PATH || 'https://git.heroku.com/travel-app-laravel.git/storage/',
+    baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://travel-app-laravel-c3c4bb9e79e3.herokuapp.com/api/',
+    imgBasePath: import.meta.env.VITE_IMG_BASE_PATH || 'https://travel-app-laravel-c3c4bb9e79e3.herokuapp.com/storage/',
     defaultImg: "/images/placeholder.png",
   },
   data: {
